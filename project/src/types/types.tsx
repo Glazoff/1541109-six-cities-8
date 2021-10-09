@@ -1,5 +1,6 @@
-// Завел два типа  для компонента App и для menu, с расчетом на то что, для разных компонентов могут передаваться
-// пропсы с разными типами.
+import {RouteProps} from 'react-router-dom';
+
+import {AuthorizationStatus} from '../const';
 
 export type MainPageProps = {
   offerCount: number;
@@ -7,4 +8,9 @@ export type MainPageProps = {
 
 export type AppScreenProps = {
   offerCount: number;
+}
+
+export type PrivateRouteProps = RouteProps & {
+  renderPage: () => JSX.Element;
+  authorizationStatus: AuthorizationStatus;
 }
