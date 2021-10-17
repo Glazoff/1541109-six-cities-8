@@ -2,7 +2,7 @@ import OfferCardScreen from '../offer-card/offer-card';
 import {MainPageProps} from '../../types/types';
 
 
-function MainPageScreen({offerCount} : MainPageProps): JSX.Element {
+function MainPageScreen({offerCount, offers} : MainPageProps): JSX.Element {
   return (
     <div className="page page--gray page--main">
       <header className="header">
@@ -92,11 +92,9 @@ function MainPageScreen({offerCount} : MainPageProps): JSX.Element {
                 </ul>
               </form>
               <div className="cities__places-list places__list tabs__content">
-                <OfferCardScreen/>
-                <OfferCardScreen/>
-                <OfferCardScreen/>
-                <OfferCardScreen/>
-                <OfferCardScreen/>
+
+                {offers.map((offer) => <OfferCardScreen offer={offer} key={offer.id}/>)}
+
               </div>
             </section>
             <div className="cities__right-section">

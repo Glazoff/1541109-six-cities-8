@@ -11,14 +11,17 @@ import Error404Screen from '../error-404-page/error-404-page';
 import PrivateRoute from '../private-route/private-route';
 
 
-function App({offerCount} : AppScreenProps): JSX.Element {
+function App({offerCount, offers} : AppScreenProps): JSX.Element {
 
 
   return  (
     <BrowserRouter>
       <Switch>
         <Route  path={AppRoute.Main} exact>
-          <MainPageScreen  offerCount={offerCount}/>
+          <MainPageScreen
+            offerCount={offerCount}
+            offers={offers}
+          />
         </Route>
         <Route path={AppRoute.SignIn} exact>
           <SignInScreen />
