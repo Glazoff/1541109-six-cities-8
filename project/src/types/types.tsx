@@ -5,17 +5,33 @@ import {Offers, Offer} from './offers';
 import {AuthorizationStatus} from '../const';
 
 export type MainPageProps = {
-  offerCount: number,
-  offers: Offers,
+  offerCount: number;
+  offers: Offers;
 }
 
-export type AppScreenProps = {
-  offerCount: number,
-  offers: Offers,
+export type AppProps = {
+  offerCount: number;
+  offers: Offers;
+  favoritesOffers: Offers;
 }
 
-export type OfferCardScreenProps = {
-  offer: Offer,
+export type OfferCardProps = {
+  offer: Offer;
+  onMouseEnter:() => void;
+  isFavoritesPage: boolean;
+}
+
+export type OfferListProps = {
+  offers: Offers;
+  isFavoritesPage: boolean;
+}
+
+export type FavoritesPageProps = {
+  offers: Offers;
+}
+
+export type RoomOfferProps = {
+  offers: Offers;
 }
 
 export type PrivateRouteProps = RouteProps & {

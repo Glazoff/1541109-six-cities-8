@@ -1,22 +1,25 @@
-import {OfferCardScreenProps} from '../../types/types';
+import { Link } from 'react-router-dom';
 
-function OfferCardScreen({offer} : OfferCardScreenProps): JSX.Element {
+import {OfferCardProps} from '../../types/types';
+
+function OfferCardScreen({offer, onMouseEnter, isFavoritesPage} : OfferCardProps): JSX.Element {
   const {previewImage, isPremium, price, title, type, isFavorite, rating} = offer;
 
   const widthRating = `${(100 * rating)/5.0}%`;
 
+  const cardPath = `/offer/${offer.id}`;
 
   return(
-    <article className="cities__place-card place-card">
-      {isPremium?
+    <article onMouseEnter={onMouseEnter} className={`place-card ${isFavoritesPage? 'favorites__card' :'cities__place-card'}`}>
+      {isPremium &&(
         <div className="place-card__mark">
           <span>Premium</span>
-        </div>:
-        ''}
-      <div className="cities__image-wrapper place-card__image-wrapper">
-        <a href="#">
-          <img className="place-card__image" src={previewImage} width="260" height="200" alt="Place image"/>
-        </a>
+        </div>
+      )}
+      <div className={`place-card__image-wrapper ${isFavoritesPage? 'favorites__image-wrapper' : 'cities__image-wrapper' }`}>
+        <Link to={cardPath}>
+          <img className="place-card__image" src={previewImage} width={isFavoritesPage? '150': '260'} height={isFavoritesPage? '110': '200'} alt="Place image"/>
+        </Link>
       </div>
       <div className="place-card__info">
         <div className="place-card__price-wrapper">
@@ -37,8 +40,10 @@ function OfferCardScreen({offer} : OfferCardScreenProps): JSX.Element {
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
-        <h2 className="place-card__name">
-          <a href="#">{title}</a>
+        <h2 >
+          <Link to={cardPath}>
+            {title}
+          </Link>
         </h2>
         <p className="place-card__type">{type}</p>
       </div>
