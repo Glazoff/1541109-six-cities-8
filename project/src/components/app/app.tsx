@@ -1,24 +1,27 @@
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 
-import {AppScreenProps} from '../../types/types';
+import {AppProps} from '../../types/types';
 import {AppRoute, AuthorizationStatus} from '../../const';
 
 import MainPageScreen from '../main-page/main-page';
 import SignInScreen from '../sign-in-page/sign-in-page';
-import FavoritesPageScree from '../favorites-page/favorites-page';
+import FavoritesPageScreen from '../favorites-page/favorites-page';
 import RoomOfferScreen from '../room-offer-page/room-offer-page';
 import Error404Screen from '../error-404-page/error-404-page';
 import PrivateRoute from '../private-route/private-route';
 
 
-function App({offerCount} : AppScreenProps): JSX.Element {
+function App({offerCount, offers, favoritesOffers} : AppProps): JSX.Element {
 
 
   return  (
     <BrowserRouter>
       <Switch>
         <Route  path={AppRoute.Main} exact>
-          <MainPageScreen  offerCount={offerCount}/>
+          <MainPageScreen
+            offerCount={offerCount}
+            offers={offers}
+          />
         </Route>
         <Route path={AppRoute.SignIn} exact>
           <SignInScreen />
@@ -26,12 +29,12 @@ function App({offerCount} : AppScreenProps): JSX.Element {
         <PrivateRoute
           path={AppRoute.Favorites}
           exact
-          renderPage={() => <FavoritesPageScree/>}
-          authorizationStatus={AuthorizationStatus.NoAuth}
+          renderPage={() => <FavoritesPageScreen offers={favoritesOffers}/>}
+          authorizationStatus={AuthorizationStatus.Auth}
         >
         </PrivateRoute>
         <Route path={AppRoute.Room} exact>
-          <RoomOfferScreen/>
+          <RoomOfferScreen offers={offers}/>
         </Route>
         <Route>
           <Error404Screen/>

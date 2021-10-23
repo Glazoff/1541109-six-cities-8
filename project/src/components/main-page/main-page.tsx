@@ -1,8 +1,9 @@
-import OfferCardScreen from '../offer-card/offer-card';
+import OfferListScreen from '../offer-list/offer-list';
+
 import {MainPageProps} from '../../types/types';
 
 
-function MainPageScreen({offerCount} : MainPageProps): JSX.Element {
+function MainPageScreen({offerCount, offers} : MainPageProps): JSX.Element {
   return (
     <div className="page page--gray page--main">
       <header className="header">
@@ -91,13 +92,7 @@ function MainPageScreen({offerCount} : MainPageProps): JSX.Element {
                   <li className="places__option" tabIndex={0}>Top rated first</li>
                 </ul>
               </form>
-              <div className="cities__places-list places__list tabs__content">
-                <OfferCardScreen/>
-                <OfferCardScreen/>
-                <OfferCardScreen/>
-                <OfferCardScreen/>
-                <OfferCardScreen/>
-              </div>
+              <OfferListScreen offers={offers} isFavoritesPage={false}/>
             </section>
             <div className="cities__right-section">
               <section className="cities__map map"></section>
