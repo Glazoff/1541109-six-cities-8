@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 import {OfferCardProps} from '../../types/types';
 
-function OfferCardScreen({offer, onMouseEnter, isFavoritesPage} : OfferCardProps): JSX.Element {
+function OfferCardScreen({offer, onHoverHandler , isFavoritesPage} : OfferCardProps): JSX.Element {
   const {previewImage, isPremium, price, title, type, isFavorite, rating} = offer;
 
   const widthRating = `${(100 * rating)/5.0}%`;
@@ -10,7 +10,7 @@ function OfferCardScreen({offer, onMouseEnter, isFavoritesPage} : OfferCardProps
   const cardPath = `/offer/${offer.id}`;
 
   return(
-    <article onMouseEnter={onMouseEnter} className={`place-card ${isFavoritesPage? 'favorites__card' :'cities__place-card'}`}>
+    <article onMouseEnter={onHoverHandler} className={`place-card ${isFavoritesPage? 'favorites__card' :'cities__place-card'}`}>
       {isPremium &&(
         <div className="place-card__mark">
           <span>Premium</span>

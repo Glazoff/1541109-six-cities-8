@@ -17,12 +17,13 @@ export type AppProps = {
 
 export type OfferCardProps = {
   offer: Offer;
-  onMouseEnter:() => void;
+  onHoverHandler:() => void;
   isFavoritesPage: boolean;
 }
 
 export type OfferListProps = {
   offers: Offers;
+  listItemHoverHandler?:(offer: Offer) => void;
   isFavoritesPage: boolean;
 }
 
