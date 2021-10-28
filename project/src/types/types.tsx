@@ -1,6 +1,6 @@
 import {RouteProps} from 'react-router-dom';
 
-import {Offers, Offer} from './offers';
+import {Offers, Offer, City} from './offers';
 
 import {AuthorizationStatus} from '../const';
 
@@ -38,4 +38,10 @@ export type RoomOfferProps = {
 export type PrivateRouteProps = RouteProps & {
   renderPage: () => JSX.Element;
   authorizationStatus: AuthorizationStatus;
+}
+
+export type MapProps = {
+  city: City;
+  points: Offers;
+  selectPoint: Offer | null;
 }

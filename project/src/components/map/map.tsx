@@ -1,6 +1,6 @@
 import {useRef, useEffect} from 'react';
 
-import {City, Offers, Offer} from '../../types/offers';
+import {MapProps} from '../../types/types';
 
 import useMap from '../../hooks/useMap';
 
@@ -20,12 +20,6 @@ const currentCustomIcon = new Icon({
   iconSize: [40, 50],
   iconAnchor: [20, 40],
 });
-
-type MapProps = {
-  city: City;
-  points: Offers;
-  selectPoint: Offer | null;
-}
 
 function Map({city, points, selectPoint} : MapProps): JSX.Element {
   const mapRef = useRef(null);
