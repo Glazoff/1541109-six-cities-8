@@ -6,12 +6,7 @@ import CommentFormScreen from '../comment-form/comment-form';
 
 function RoomOfferScreen({offers} : RoomOfferProps): JSX.Element {
   const { id } = useParams<{id: string}>();
-  const ourOffer= offers.find((offer) => {
-    if (offer.id === Number(id)) {
-      return true;
-    }
-    return false;
-  });
+  const ourOffer= offers.find((offer) => offer.id === Number(id));
   if (!ourOffer) {
     return <div></div>;
   }
@@ -54,7 +49,7 @@ function RoomOfferScreen({offers} : RoomOfferProps): JSX.Element {
         <section className="property">
           <div className="property__gallery-container container">
             <div className="property__gallery">
-              { images.map((image: string | undefined) => (
+              { images.map((image?:  string) => (
                 <div className="property__image-wrapper" key={`${id+image}`}>
                   <img className="property__image" src={image} alt="" />
                 </div>

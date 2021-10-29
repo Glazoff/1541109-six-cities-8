@@ -1,9 +1,23 @@
+import {useState} from 'react';
+
 import OfferListScreen from '../offer-list/offer-list';
 
 import {MainPageProps} from '../../types/types';
+import {Offer} from '../../types/offers';
+
+import Map from '../map/map';
 
 
 function MainPageScreen({offerCount, offers} : MainPageProps): JSX.Element {
+
+  const city = offers[0].city;
+
+  const [selectPoint, setselectPoint] = useState<Offer | null>(null);
+
+  const listItemHoverHandler = (offer: Offer) => {
+    setselectPoint(offer);
+  };
+
   return (
     <div className="page page--gray page--main">
       <header className="header">
@@ -92,10 +106,20 @@ function MainPageScreen({offerCount, offers} : MainPageProps): JSX.Element {
                   <li className="places__option" tabIndex={0}>Top rated first</li>
                 </ul>
               </form>
-              <OfferListScreen offers={offers} isFavoritesPage={false}/>
+              <OfferListScreen
+                offers={offers}
+                isFavoritesPage={false}
+                listItemHoverHandler={listItemHoverHandler}
+              />
             </section>
             <div className="cities__right-section">
-              <section className="cities__map map"></section>
+              <section className="cities__map map">
+                <Map
+                  city={city}
+                  points={offers}
+                  selectPoint={selectPoint}
+                />
+              </section>
             </div>
           </div>
         </div>
