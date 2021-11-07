@@ -6,12 +6,10 @@ import {AuthorizationStatus} from '../const';
 
 export type MainPageProps = {
   offerCount: number;
-  offers: Offers;
 }
 
 export type AppProps = {
   offerCount: number;
-  offers: Offers;
   favoritesOffers: Offers;
 }
 
@@ -32,7 +30,6 @@ export type FavoritesPageProps = {
 }
 
 export type RoomOfferProps = {
-  offers: Offers;
 }
 
 export type PrivateRouteProps = RouteProps & {

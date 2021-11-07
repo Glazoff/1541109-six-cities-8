@@ -11,7 +11,7 @@ import Error404Screen from '../error-404-page/error-404-page';
 import PrivateRoute from '../private-route/private-route';
 
 
-function App({offerCount, offers, favoritesOffers} : AppProps): JSX.Element {
+function App({offerCount, favoritesOffers} : AppProps): JSX.Element {
 
 
   return  (
@@ -20,7 +20,6 @@ function App({offerCount, offers, favoritesOffers} : AppProps): JSX.Element {
         <Route  path={AppRoute.Main} exact>
           <MainPageScreen
             offerCount={offerCount}
-            offers={offers}
           />
         </Route>
         <Route path={AppRoute.SignIn} exact>
@@ -34,7 +33,7 @@ function App({offerCount, offers, favoritesOffers} : AppProps): JSX.Element {
         >
         </PrivateRoute>
         <Route path={AppRoute.Room} exact>
-          <RoomOfferScreen offers={offers}/>
+          <RoomOfferScreen/>
         </Route>
         <Route>
           <Error404Screen/>
