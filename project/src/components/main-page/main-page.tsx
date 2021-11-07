@@ -1,22 +1,51 @@
-import {useState} from 'react';
+import {Dispatch, useEffect, useState} from 'react';
+import {connect, ConnectedProps} from 'react-redux';
 
 import OfferListScreen from '../offer-list/offer-list';
+import Map from '../map/map';
 
 import {MainPageProps} from '../../types/types';
 import {Offer} from '../../types/offers';
+import {State} from '../../types/state';
 
-import Map from '../map/map';
+import {selectCityType, fillListType, fillList, selectCity} from '../../store/action';
+
+import {offers as offersMock} from '../../mocks/offers';
 
 
-function MainPageScreen({offerCount, offers} : MainPageProps): JSX.Element {
+const mapStateToProps = ({titleCity, offers}: State) => ({
+  titleCity,
+  offers: offers.filter((offer) => offer.city.name === titleCity),
+});
 
-  const city = offers[0].city;
+const mapDispatchToProps = (dispatch: Dispatch<selectCityType | fillListType>) => ({
+  onChangeCity(titleCity: string ) {
+    dispatch(selectCity(titleCity));
+  },
+  onLoad() {
+    dispatch(fillList(offersMock));
+  },
+});
 
-  const [selectPoint, setselectPoint] = useState<Offer | null>(null);
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type ConnectedComponentProps = PropsFromRedux & MainPageProps;
+
+function MainPageScreen(props: ConnectedComponentProps): JSX.Element {
+  const {offers, onChangeCity, titleCity, onLoad} = props;
+
+  const city = offersMock[0].city;
+
+  const [selectPoint, setSelectPoint] = useState<Offer | null>(null);
 
   const listItemHoverHandler = (offer: Offer) => {
-    setselectPoint(offer);
+    setSelectPoint(offer);
   };
+
+  useEffect(() => {
+    onLoad();
+  },[]);
 
   return (
     <div className="page page--gray page--main">
@@ -54,32 +83,56 @@ function MainPageScreen({offerCount, offers} : MainPageProps): JSX.Element {
           <section className="locations container">
             <ul className="locations__list tabs__list">
               <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
+                <a
+                  className="locations__item-link tabs__item"
+                  onClick={() => onChangeCity('Paris')}
+                  href="#"
+                >
                   <span>Paris</span>
                 </a>
               </li>
               <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
+                <a
+                  className="locations__item-link tabs__item"
+                  onClick={() => onChangeCity('Cologne')}
+                  href="#"
+                >
                   <span>Cologne</span>
                 </a>
               </li>
               <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
+                <a
+                  className="locations__item-link tabs__item"
+                  onClick={() => onChangeCity('Brussels')}
+                  href="#"
+                >
                   <span>Brussels</span>
                 </a>
               </li>
               <li className="locations__item">
-                <a className="locations__item-link tabs__item tabs__item--active" href="#">
+                <a
+                  className="locations__item-link tabs__item tabs__item--active"
+                  onClick={() => onChangeCity('Amsterdam')}
+                  href="#"
+                >
                   <span>Amsterdam</span>
                 </a>
               </li>
               <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
+                <a
+                  className="locations__item-link tabs__item"
+                  onClick={() => onChangeCity('Hamburg')}
+                  href="#"
+                >
                   <span>Hamburg</span>
                 </a>
               </li>
               <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
+                <a
+                  className="locations__item-link tabs__item"
+                  onClick={() => onChangeCity('Hamburg')}
+                  href="#"
+                >
                   <span>Dusseldorf</span>
                 </a>
               </li>
@@ -90,7 +143,7 @@ function MainPageScreen({offerCount, offers} : MainPageProps): JSX.Element {
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{offerCount} places to stay in Amsterdam</b>
+              <b className="places__found">{offers.length} places to stay in {titleCity}</b>
               <form className="places__sorting" action="#" method="get">
                 <span className="places__sorting-caption">Sort by</span>
                 <span className="places__sorting-type" tabIndex={0}>
@@ -107,7 +160,7 @@ function MainPageScreen({offerCount, offers} : MainPageProps): JSX.Element {
                 </ul>
               </form>
               <OfferListScreen
-                offers={offers}
+                offers={offersMock}
                 isFavoritesPage={false}
                 listItemHoverHandler={listItemHoverHandler}
               />
@@ -128,5 +181,5 @@ function MainPageScreen({offerCount, offers} : MainPageProps): JSX.Element {
   );
 }
 
-
-export default MainPageScreen;
+export {MainPageScreen};
+export default connector(MainPageScreen);

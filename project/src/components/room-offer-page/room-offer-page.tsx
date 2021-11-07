@@ -1,12 +1,43 @@
+import {Dispatch} from 'react';
 import {useParams} from 'react-router-dom';
 
+import {connect, ConnectedProps} from 'react-redux';
+
+import {State} from '../../types/state';
 import {RoomOfferProps} from '../../types/types';
+
+import {selectCityType, fillListType, fillList, selectCity} from '../../store/action';
 
 import CommentFormScreen from '../comment-form/comment-form';
 
-function RoomOfferScreen({offers} : RoomOfferProps): JSX.Element {
-  const { id } = useParams<{id: string}>();
+import {offers as offersMock} from '../../mocks/offers';
+
+
+const mapStateToProps = ({titleCity, offers}: State) => ({
+  titleCity,
+  offers: offers.filter((offer) => offer.city.name === titleCity),
+});
+
+const mapDispatchToProps = (dispatch: Dispatch<selectCityType | fillListType>) => ({
+  onChangeCity(titleCity: string ) {
+    dispatch(selectCity(titleCity));
+  },
+  onLoad() {
+    dispatch(fillList(offersMock));
+  },
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type ConnectedComponentProps = PropsFromRedux & RoomOfferProps;
+
+function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
+  const {offers} = props;
+
+  const {id} = useParams<{id: string}>();
   const ourOffer= offers.find((offer) => offer.id === Number(id));
+
   if (!ourOffer) {
     return <div></div>;
   }
@@ -265,5 +296,6 @@ function RoomOfferScreen({offers} : RoomOfferProps): JSX.Element {
   );
 }
 
-export default RoomOfferScreen;
+export {RoomOfferScreen};
+export default connector(RoomOfferScreen);
 
