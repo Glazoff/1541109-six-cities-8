@@ -9,7 +9,7 @@ function OfferCardScreen({offer, onHoverHandler , isFavoritesPage} : OfferCardPr
 
   const cardPath = `/offer/${offer.id}`;
 
-  return(
+  return (
     <article onMouseEnter={onHoverHandler} className={`place-card ${isFavoritesPage? 'favorites__card' :'cities__place-card'}`}>
       {isPremium &&(
         <div className="place-card__mark">

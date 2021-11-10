@@ -5,25 +5,24 @@ import {connect, ConnectedProps} from 'react-redux';
 
 import {State} from '../../types/state';
 import {RoomOfferProps} from '../../types/types';
+import {Offers} from '../../types/offers';
 
 import {selectCityType, fillListType, fillList, selectCity} from '../../store/action';
 
 import CommentFormScreen from '../comment-form/comment-form';
 
-import {offers as offersMock} from '../../mocks/offers';
-
 
 const mapStateToProps = ({titleCity, offers}: State) => ({
   titleCity,
-  offers: offers.filter((offer) => offer.city.name === titleCity),
+  offers: offers.filter((offer) => offer.city.nameCity === titleCity),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<selectCityType | fillListType>) => ({
   onChangeCity(titleCity: string ) {
     dispatch(selectCity(titleCity));
   },
-  onLoad() {
-    dispatch(fillList(offersMock));
+  onLoad(offers: Offers) {
+    dispatch(fillList(offers));
   },
 });
 

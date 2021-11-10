@@ -1,9 +1,38 @@
-import {FavoritesPageProps} from '../../types/types';
+import {Dispatch} from 'react';
+import {connect, ConnectedProps} from 'react-redux';
 
+import {FavoritesPageProps} from '../../types/types';
+import {Offers} from '../../types/offers';
+import {State} from '../../types/state';
+import {selectCityType, fillListType, fillList, selectCity} from '../../store/action';
+
+import LoaderScreen from '../loader/loader';
 import OfferListScreen from '../offer-list/offer-list';
 
-function FavoritesPageScreen ({offers} : FavoritesPageProps): JSX.Element {
-  return(
+const mapStateToProps = ({titleCity, offers}: State) => ({
+  titleCity,
+  offers: offers.filter((offer) => offer.city.nameCity === titleCity),
+});
+
+const mapDispatchToProps = (dispatch: Dispatch<selectCityType | fillListType>) => ({
+  onChangeCity(titleCity: string ) {
+    dispatch(selectCity(titleCity));
+  },
+  onLoad(offers: Offers) {
+    dispatch(fillList(offers));
+  },
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type ConnectedComponentProps = PropsFromRedux & FavoritesPageProps;
+
+
+function FavoritesPageScreen (props : ConnectedComponentProps): JSX.Element {
+  const {offers} = props;
+
+  return offers ? (
     <div className="page">
       <header className="header">
         <div className="container">
@@ -58,7 +87,8 @@ function FavoritesPageScreen ({offers} : FavoritesPageProps): JSX.Element {
         </a>
       </footer>
     </div>
-  );
+  ): <LoaderScreen/>;
 }
 
-export default FavoritesPageScreen;
+export {FavoritesPageScreen};
+export default connector(FavoritesPageScreen);
