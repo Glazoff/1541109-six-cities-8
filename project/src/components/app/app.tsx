@@ -11,7 +11,7 @@ import Error404Screen from '../error-404-page/error-404-page';
 import PrivateRoute from '../private-route/private-route';
 
 
-function App({offerCount, favoritesOffers} : AppProps): JSX.Element {
+function App({offerCount} : AppProps): JSX.Element {
 
 
   return  (
@@ -28,7 +28,7 @@ function App({offerCount, favoritesOffers} : AppProps): JSX.Element {
         <PrivateRoute
           path={AppRoute.Favorites}
           exact
-          renderPage={() => <FavoritesPageScreen offers={favoritesOffers}/>}
+          renderPage={() => <FavoritesPageScreen/>}
           authorizationStatus={AuthorizationStatus.Auth}
         >
         </PrivateRoute>

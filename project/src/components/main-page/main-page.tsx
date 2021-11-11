@@ -1,29 +1,28 @@
-import {Dispatch, useEffect, useState} from 'react';
+import {Dispatch, useState} from 'react';
 import {connect, ConnectedProps} from 'react-redux';
 
 import OfferListScreen from '../offer-list/offer-list';
+import LoaderScreen from '../loader/loader';
 import Map from '../map/map';
 
 import {MainPageProps} from '../../types/types';
-import {Offer} from '../../types/offers';
+import {Offer, Offers} from '../../types/offers';
 import {State} from '../../types/state';
 
 import {selectCityType, fillListType, fillList, selectCity} from '../../store/action';
 
-import {offers as offersMock} from '../../mocks/offers';
-
 
 const mapStateToProps = ({titleCity, offers}: State) => ({
   titleCity,
-  offers: offers.filter((offer) => offer.city.name === titleCity),
+  offers: offers.filter((offer) => offer.city.nameCity === titleCity),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<selectCityType | fillListType>) => ({
   onChangeCity(titleCity: string ) {
     dispatch(selectCity(titleCity));
   },
-  onLoad() {
-    dispatch(fillList(offersMock));
+  onLoad(offers: Offers) {
+    dispatch(fillList(offers));
   },
 });
 
@@ -33,9 +32,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & MainPageProps;
 
 function MainPageScreen(props: ConnectedComponentProps): JSX.Element {
-  const {offers, onChangeCity, titleCity, onLoad} = props;
-
-  const city = offersMock[0].city;
+  const {offers, onChangeCity, titleCity} = props;
 
   const [selectPoint, setSelectPoint] = useState<Offer | null>(null);
 
@@ -43,11 +40,7 @@ function MainPageScreen(props: ConnectedComponentProps): JSX.Element {
     setSelectPoint(offer);
   };
 
-  useEffect(() => {
-    onLoad();
-  },[]);
-
-  return (
+  return offers ? (
     <div className="page page--gray page--main">
       <header className="header">
         <div className="container">
@@ -130,7 +123,7 @@ function MainPageScreen(props: ConnectedComponentProps): JSX.Element {
               <li className="locations__item">
                 <a
                   className="locations__item-link tabs__item"
-                  onClick={() => onChangeCity('Hamburg')}
+                  onClick={() => onChangeCity('Dusseldorf')}
                   href="#"
                 >
                   <span>Dusseldorf</span>
@@ -160,7 +153,7 @@ function MainPageScreen(props: ConnectedComponentProps): JSX.Element {
                 </ul>
               </form>
               <OfferListScreen
-                offers={offersMock}
+                offers={offers}
                 isFavoritesPage={false}
                 listItemHoverHandler={listItemHoverHandler}
               />
@@ -168,7 +161,7 @@ function MainPageScreen(props: ConnectedComponentProps): JSX.Element {
             <div className="cities__right-section">
               <section className="cities__map map">
                 <Map
-                  city={city}
+                  offers={offers}
                   points={offers}
                   selectPoint={selectPoint}
                 />
@@ -178,7 +171,7 @@ function MainPageScreen(props: ConnectedComponentProps): JSX.Element {
         </div>
       </main>
     </div>
-  );
+  ): <LoaderScreen/>;
 }
 
 export {MainPageScreen};

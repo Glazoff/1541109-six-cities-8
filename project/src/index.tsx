@@ -1,25 +1,40 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {createStore} from 'redux';
+
+import {createStore, applyMiddleware} from 'redux';
+import thunk from 'redux-thunk';
 import {Provider} from 'react-redux';
 import {composeWithDevTools} from 'redux-devtools-extension';
+
+import {createAPI} from './services/api';
+
 import App from './components/app/app';
+
 import {reducer} from './store/reducer';
 
-import {favoritesOffers} from './mocks/offers';
+import {loadOffers} from './store/action';
+
 
 const Setting = {
   OFFER_COUNT: 212,
 };
 
-const store = createStore(reducer, composeWithDevTools());
+const onUnauthorized = () => {
+  // eslint-disable-next-line no-console
+  console.log('Пользователь не авторизован');
+}; // функция отрабатывает случай неавторизованного пользователя
+
+export const API = createAPI(onUnauthorized);
+
+export const store = createStore(reducer, composeWithDevTools(applyMiddleware(thunk.withExtraArgument(API))));
+
+store.dispatch(loadOffers());
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store} >
       <App
         offerCount = {Setting.OFFER_COUNT}
-        favoritesOffers = {favoritesOffers}
       />
     </Provider>
 

@@ -1,6 +1,6 @@
 import {RouteProps} from 'react-router-dom';
 
-import {Offers, Offer, City} from './offers';
+import {Offers, Offer} from './offers';
 
 import {AuthorizationStatus} from '../const';
 
@@ -10,7 +10,6 @@ export type MainPageProps = {
 
 export type AppProps = {
   offerCount: number;
-  favoritesOffers: Offers;
 }
 
 export type OfferCardProps = {
@@ -26,7 +25,6 @@ export type OfferListProps = {
 }
 
 export type FavoritesPageProps = {
-  offers: Offers;
 }
 
 export type RoomOfferProps = {
@@ -38,7 +36,7 @@ export type PrivateRouteProps = RouteProps & {
 }
 
 export type MapProps = {
-  city: City;
+  offers: Offers;
   points: Offers;
   selectPoint: Offer | null;
 }
