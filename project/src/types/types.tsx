@@ -30,7 +30,7 @@ export type RoomOfferProps = {
 
 export type PrivateRouteProps = RouteProps & {
   renderPage: () => JSX.Element;
-  authorizationStatus: AuthorizationStatus;
+  authorization: AuthorizationStatus;
 }
 
 export type MapProps = {

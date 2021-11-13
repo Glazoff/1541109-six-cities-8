@@ -1,4 +1,4 @@
-import {useRef, useEffect, Dispatch} from 'react';
+import {useRef, useEffect} from 'react';
 
 import {MapProps} from '../../types/types';
 
@@ -10,8 +10,7 @@ import 'leaflet/dist/leaflet.css';
 import {MARKER_DEFAULT, MARKER_CURRENT} from '../../const';
 import { connect, ConnectedProps } from 'react-redux';
 import { State } from '../../types/state';
-import { SelectOfferForMapType, SelectOfferForMap } from '../../store/action';
-import {Offer} from '../../types/offers';
+
 
 const defaultCustomIcon = new Icon({
   iconUrl: MARKER_DEFAULT,
@@ -30,13 +29,7 @@ const mapStateToProps = ({activeOfferForMap, offers}: State) => ({
   offers,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<SelectOfferForMapType>) => ({
-  selectOffer (offer: Offer) {
-    dispatch(SelectOfferForMap(offer));
-  },
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(mapStateToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & MapProps;
@@ -47,8 +40,6 @@ function Map(props : ConnectedComponentProps): JSX.Element {
 
   const city = points[0].city;
 
-  // eslint-disable-next-line no-console
-  console.log(city);
 
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);

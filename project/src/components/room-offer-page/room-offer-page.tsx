@@ -14,7 +14,7 @@ import CommentFormScreen from '../comment-form/comment-form';
 
 const mapStateToProps = ({titleCity, offers}: State) => ({
   titleCity,
-  offers: offers.filter((offer) => offer.city.nameCity === titleCity),
+  offers: offers?.filter((offer) => offer.city.nameCity === titleCity),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<selectCityType | fillListType>) => ({
@@ -35,7 +35,7 @@ function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
   const {offers} = props;
 
   const {id} = useParams<{id: string}>();
-  const ourOffer= offers.find((offer) => offer.id === Number(id));
+  const ourOffer= offers?.find((offer) => offer.id === Number(id));
 
   if (!ourOffer) {
     return <div></div>;

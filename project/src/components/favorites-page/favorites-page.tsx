@@ -11,7 +11,7 @@ import OfferListScreen from '../offer-list/offer-list';
 
 const mapStateToProps = ({titleCity, offers}: State) => ({
   titleCity,
-  offers: offers.filter((offer) => offer.city.nameCity === titleCity),
+  offers: offers?.filter((offer) => offer.city.nameCity === titleCity),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<selectCityType | fillListType>) => ({

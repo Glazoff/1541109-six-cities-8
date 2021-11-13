@@ -29,7 +29,7 @@ function App({offerCount} : AppProps): JSX.Element {
           path={AppRoute.Favorites}
           exact
           renderPage={() => <FavoritesPageScreen/>}
-          authorizationStatus={AuthorizationStatus.Auth}
+          authorization={AuthorizationStatus.Auth}
         >
         </PrivateRoute>
         <Route path={AppRoute.Room} exact>

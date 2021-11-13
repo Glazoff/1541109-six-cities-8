@@ -6,7 +6,8 @@ export enum ActionType {
   ChangeCity = 'main/changeCity',
   FillList = 'main/fillList',
   LoadOffers = 'server/loadOffers',
-  SelectOfferForMap = 'map/selectOffer'
+  GetAuth = 'server/getAuth',
+  SelectOfferForMap = 'map/selectOffer',
 }
 
 export type selectCityType = {
@@ -24,6 +25,11 @@ export type SelectOfferForMapType = {
   activeOfferForMap: Offer,
 }
 
+export type getAuthType = {
+  type: ActionType.GetAuth,
+  authorizationStatus: boolean;
+}
+
 export type responseType = {
   data: OffersForAdapterTypes;
 }
@@ -35,6 +41,22 @@ export const loadOffers = () => (dispatch: any, _getState: any, api: any) => {
       dispatch(fillList(formattedData));
     });
 };
+
+export const getAuthFromServer = () => (_dispatch: any, _getState: any, api: any) => {
+  api.get('/login')
+    .then();
+};
+
+export const sendAuthToServer = (email: string, password: string) => (_dispatch: any, _getState: any, api: any) => {
+  api.post('/login',{email, password})
+    .then();
+};
+
+
+export const setAuth = (authorizationStatus: boolean): getAuthType => ({
+  type: ActionType.GetAuth,
+  authorizationStatus,
+});
 
 export const selectCity = (city: string): selectCityType => ({
   type: ActionType.ChangeCity,

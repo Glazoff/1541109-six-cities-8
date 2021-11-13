@@ -14,7 +14,7 @@ import { Dispatch } from 'react';
 
 const mapStateToProps = ({titleCity, offers}: State) => ({
   titleCity,
-  offers: offers.filter((offer) => offer.city.nameCity === titleCity),
+  offers: offers?.filter((offer) => offer.city.nameCity === titleCity),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<selectCityType | fillListType>) => ({
@@ -34,8 +34,6 @@ type ConnectedComponentProps = PropsFromRedux & MainPageProps;
 function MainPageScreen(props: ConnectedComponentProps): JSX.Element {
   const {offers, onChangeCity, titleCity} = props;
 
-  // eslint-disable-next-line no-console
-  console.log(offers);
 
   return offers ? (
     <div className="page page--gray page--main">
