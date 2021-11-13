@@ -29,8 +29,6 @@ export type responseType = {
 }
 
 export const loadOffers = () => (dispatch: any, _getState: any, api: any) => {
-  // eslint-disable-next-line no-console
-  console.log(api);
   api.get('/hotels')
     .then((response: responseType) => {
       const formattedData = parseOffers(response.data);

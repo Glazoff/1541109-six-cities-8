@@ -1,4 +1,3 @@
-import {Dispatch, useState} from 'react';
 import {connect, ConnectedProps} from 'react-redux';
 
 import OfferListScreen from '../offer-list/offer-list';
@@ -6,10 +5,11 @@ import LoaderScreen from '../loader/loader';
 import Map from '../map/map';
 
 import {MainPageProps} from '../../types/types';
-import {Offer, Offers} from '../../types/offers';
 import {State} from '../../types/state';
 
 import {selectCityType, fillListType, fillList, selectCity} from '../../store/action';
+import { Offers } from '../../types/offers';
+import { Dispatch } from 'react';
 
 
 const mapStateToProps = ({titleCity, offers}: State) => ({
@@ -34,11 +34,8 @@ type ConnectedComponentProps = PropsFromRedux & MainPageProps;
 function MainPageScreen(props: ConnectedComponentProps): JSX.Element {
   const {offers, onChangeCity, titleCity} = props;
 
-  const [selectPoint, setSelectPoint] = useState<Offer | null>(null);
-
-  const listItemHoverHandler = (offer: Offer) => {
-    setSelectPoint(offer);
-  };
+  // eslint-disable-next-line no-console
+  console.log(offers);
 
   return offers ? (
     <div className="page page--gray page--main">
@@ -155,15 +152,12 @@ function MainPageScreen(props: ConnectedComponentProps): JSX.Element {
               <OfferListScreen
                 offers={offers}
                 isFavoritesPage={false}
-                listItemHoverHandler={listItemHoverHandler}
               />
             </section>
             <div className="cities__right-section">
               <section className="cities__map map">
                 <Map
-                  offers={offers}
                   points={offers}
-                  selectPoint={selectPoint}
                 />
               </section>
             </div>

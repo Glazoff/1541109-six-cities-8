@@ -23,7 +23,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & OfferCardProps;
 
 function OfferCardScreen(props : ConnectedComponentProps): JSX.Element {
-  const {offer, onHoverHandler , isFavoritesPage, selectOffer} = props;
+  const {offer , isFavoritesPage, selectOffer} = props;
 
   const {previewImage, isPremium, price, title, type, isFavorite, rating} = offer;
 
@@ -43,7 +43,7 @@ function OfferCardScreen(props : ConnectedComponentProps): JSX.Element {
           <img className="place-card__image" src={previewImage} width={isFavoritesPage? '150': '260'} height={isFavoritesPage? '110': '200'} alt="Place image"/>
         </Link>
       </div>
-      <div onMouseEnter={onHoverHandler} className="place-card__info">
+      <div className="place-card__info">
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
             <b className="place-card__price-value">&euro;{price}</b>

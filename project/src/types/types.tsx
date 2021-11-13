@@ -14,13 +14,11 @@ export type AppProps = {
 
 export type OfferCardProps = {
   offer: Offer;
-  onHoverHandler:() => void;
   isFavoritesPage: boolean;
 }
 
 export type OfferListProps = {
   offers: Offers;
-  listItemHoverHandler?:(offer: Offer) => void;
   isFavoritesPage: boolean;
 }
 
@@ -36,7 +34,5 @@ export type PrivateRouteProps = RouteProps & {
 }
 
 export type MapProps = {
-  offers: Offers;
   points: Offers;
-  selectPoint: Offer | null;
 }

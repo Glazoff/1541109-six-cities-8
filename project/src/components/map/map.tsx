@@ -25,8 +25,9 @@ const currentCustomIcon = new Icon({
   iconAnchor: [20, 40],
 });
 
-const mapStateToProps = ({activeOfferForMap}: State) => ({
+const mapStateToProps = ({activeOfferForMap, offers}: State) => ({
   activeOfferForMap,
+  offers,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<SelectOfferForMapType>) => ({
@@ -41,9 +42,14 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & MapProps;
 
 function Map(props : ConnectedComponentProps): JSX.Element {
-  const {offers, points, activeOfferForMap} = props;
+  const {points, activeOfferForMap} = props;
 
-  const city = offers[0].city;
+
+  const city = points[0].city;
+
+  // eslint-disable-next-line no-console
+  console.log(city);
+
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
 
