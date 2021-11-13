@@ -1,4 +1,4 @@
-import {useRef, useEffect} from 'react';
+import {useRef, useEffect, Dispatch} from 'react';
 
 import {MapProps} from '../../types/types';
 
@@ -8,6 +8,10 @@ import {Icon, Marker} from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 import {MARKER_DEFAULT, MARKER_CURRENT} from '../../const';
+import { connect, ConnectedProps } from 'react-redux';
+import { State } from '../../types/state';
+import { SelectOfferForMapType, SelectOfferForMap } from '../../store/action';
+import {Offer} from '../../types/offers';
 
 const defaultCustomIcon = new Icon({
   iconUrl: MARKER_DEFAULT,
@@ -21,7 +25,24 @@ const currentCustomIcon = new Icon({
   iconAnchor: [20, 40],
 });
 
-function Map({offers, points, selectPoint} : MapProps): JSX.Element {
+const mapStateToProps = ({activeOfferForMap}: State) => ({
+  activeOfferForMap,
+});
+
+const mapDispatchToProps = (dispatch: Dispatch<SelectOfferForMapType>) => ({
+  selectOffer (offer: Offer) {
+    dispatch(SelectOfferForMap(offer));
+  },
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type ConnectedComponentProps = PropsFromRedux & MapProps;
+
+function Map(props : ConnectedComponentProps): JSX.Element {
+  const {offers, points, activeOfferForMap} = props;
+
   const city = offers[0].city;
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
@@ -36,14 +57,14 @@ function Map({offers, points, selectPoint} : MapProps): JSX.Element {
 
         marker
           .setIcon(
-            selectPoint && point.title === selectPoint.title
+            activeOfferForMap && point.title === activeOfferForMap.title
               ? currentCustomIcon
               : defaultCustomIcon,
           )
           .addTo(map);
       });
     }
-  }, [map, points, selectPoint]);
+  }, [map, points, activeOfferForMap]);
 
 
   return (
@@ -55,4 +76,5 @@ function Map({offers, points, selectPoint} : MapProps): JSX.Element {
   );
 }
 
-export default Map;
+export {Map};
+export default connector(Map);

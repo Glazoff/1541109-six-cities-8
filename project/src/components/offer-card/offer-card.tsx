@@ -1,8 +1,30 @@
+import { Dispatch } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { SelectOfferForMapType, SelectOfferForMap } from '../../store/action';
+import { Offer } from '../../types/offers';
+import { State } from '../../types/state';
 
 import {OfferCardProps} from '../../types/types';
 
-function OfferCardScreen({offer, onHoverHandler , isFavoritesPage} : OfferCardProps): JSX.Element {
+const mapStateToProps = ({activeOfferForMap}: State) => ({
+  activeOfferForMap,
+});
+
+const mapDispatchToProps = (dispatch: Dispatch<SelectOfferForMapType>) => ({
+  selectOffer (offer: Offer) {
+    dispatch(SelectOfferForMap(offer));
+  },
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type ConnectedComponentProps = PropsFromRedux & OfferCardProps;
+
+function OfferCardScreen(props : ConnectedComponentProps): JSX.Element {
+  const {offer, onHoverHandler , isFavoritesPage, selectOffer} = props;
+
   const {previewImage, isPremium, price, title, type, isFavorite, rating} = offer;
 
   const widthRating = `${(100 * rating)/5.0}%`;
@@ -10,7 +32,7 @@ function OfferCardScreen({offer, onHoverHandler , isFavoritesPage} : OfferCardPr
   const cardPath = `/offer/${offer.id}`;
 
   return (
-    <article onMouseEnter={onHoverHandler} className={`place-card ${isFavoritesPage? 'favorites__card' :'cities__place-card'}`}>
+    <article onMouseEnter={() => selectOffer(offer)} className={`place-card ${isFavoritesPage? 'favorites__card' :'cities__place-card'}`}>
       {isPremium &&(
         <div className="place-card__mark">
           <span>Premium</span>
@@ -21,7 +43,7 @@ function OfferCardScreen({offer, onHoverHandler , isFavoritesPage} : OfferCardPr
           <img className="place-card__image" src={previewImage} width={isFavoritesPage? '150': '260'} height={isFavoritesPage? '110': '200'} alt="Place image"/>
         </Link>
       </div>
-      <div className="place-card__info">
+      <div onMouseEnter={onHoverHandler} className="place-card__info">
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
             <b className="place-card__price-value">&euro;{price}</b>
@@ -51,4 +73,5 @@ function OfferCardScreen({offer, onHoverHandler , isFavoritesPage} : OfferCardPr
   );
 }
 
-export default OfferCardScreen;
+export {OfferCardScreen};
+export default connector(OfferCardScreen);

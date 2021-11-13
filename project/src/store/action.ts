@@ -1,11 +1,12 @@
-import {Offers, OffersForAdapterTypes} from '../types/offers';
+import {Offer, Offers, OffersForAdapterTypes} from '../types/offers';
 
 import {parseOffers} from '../adapters/parse-offers';
 
 export enum ActionType {
   ChangeCity = 'main/changeCity',
   FillList = 'main/fillList',
-  LoadOffers = 'server/loadOffers'
+  LoadOffers = 'server/loadOffers',
+  SelectOfferForMap = 'map/selectOffer'
 }
 
 export type selectCityType = {
@@ -18,8 +19,9 @@ export type fillListType = {
   offers: Offers,
 }
 
-export type loadOffersType = {
-  type: ActionType.LoadOffers,
+export type SelectOfferForMapType = {
+  type: ActionType.SelectOfferForMap,
+  activeOfferForMap: Offer,
 }
 
 export type responseType = {
@@ -46,4 +48,7 @@ export const fillList = (offers: Offers): fillListType => ({
   offers,
 });
 
-
+export const SelectOfferForMap = (offer: Offer): SelectOfferForMapType => ({
+  type: ActionType.SelectOfferForMap,
+  activeOfferForMap: offer,
+});
