@@ -12,9 +12,11 @@ import { Offers } from '../../types/offers';
 import { Dispatch } from 'react';
 
 
-const mapStateToProps = ({titleCity, offers}: State) => ({
+const mapStateToProps = ({titleCity, offers, authorizationStatus, user}: State) => ({
   titleCity,
   offers: offers?.filter((offer) => offer.city.nameCity === titleCity),
+  authorizationStatus,
+  user,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<selectCityType | fillListType>) => ({
@@ -32,7 +34,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & MainPageProps;
 
 function MainPageScreen(props: ConnectedComponentProps): JSX.Element {
-  const {offers, onChangeCity, titleCity} = props;
+  const {offers, onChangeCity, titleCity, authorizationStatus, user} = props;
 
 
   return offers ? (
@@ -46,20 +48,30 @@ function MainPageScreen(props: ConnectedComponentProps): JSX.Element {
               </a>
             </div>
             <nav className="header__nav">
-              <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <a className="header__nav-link header__nav-link--profile" href="#">
-                    <div className="header__avatar-wrapper user__avatar-wrapper">
-                    </div>
-                    <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                  </a>
-                </li>
-                <li className="header__nav-item">
-                  <a className="header__nav-link" href="#">
-                    <span className="header__signout">Sign out</span>
-                  </a>
-                </li>
-              </ul>
+              {authorizationStatus ?
+                <ul className="header__nav-list">
+                  <li className="header__nav-item user">
+                    <a className="header__nav-link header__nav-link--profile" href="#">
+                      <div className="header__avatar-wrapper user__avatar-wrapper">
+                      </div>
+                      <span className="header__user-name user__name">{user?.email}</span>
+                    </a>
+                  </li>
+                  <li className="header__nav-item">
+                    <a className="header__nav-link" href="#">
+                      <span className="header__signout">Sign out</span>
+                    </a>
+                  </li>
+                </ul>:
+                <ul className="header__nav-list">
+                  <li className="header__nav-item user">
+                    <a className="header__nav-link header__nav-link--profile" href="#">
+                      <div className="header__avatar-wrapper user__avatar-wrapper">
+                      </div>
+                      <span className="header__login">Sign in</span>
+                    </a>
+                  </li>
+                </ul>}
             </nav>
           </div>
         </div>
