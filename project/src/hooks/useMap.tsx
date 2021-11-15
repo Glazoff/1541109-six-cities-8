@@ -27,8 +27,6 @@ function useMap(
             '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'},
       );
 
-      // eslint-disable-next-line no-console
-      console.log(instance);
 
       instance.addLayer(layer);
 

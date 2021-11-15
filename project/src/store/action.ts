@@ -83,9 +83,9 @@ export const sendAuthToServer = (email: string, password: string) => (dispatch: 
 };
 
 export const getComments = (id: number) => (dispatch: any, _getState: any, api: any) => {
-  api.post(`/comments/${id}`)
+  api.get(`/comments/${id}`)
     .then((response: any) => {
-      if(response === 200) {
+      if(response.status === 200) {
         const formattedData = response.data;
 
         dispatch(setComments(parseComments(formattedData)));

@@ -2,6 +2,8 @@ import {RouteProps} from 'react-router-dom';
 
 import {Offers, Offer} from './offers';
 
+import {commentsType, commentType} from './comment';
+
 export type MainPageProps = {
   offerCount: number;
 }
@@ -24,6 +26,14 @@ export type FavoritesPageProps = {
 }
 
 export type RoomOfferProps = {
+}
+
+export type ReviewsListType = {
+  comments: commentsType
+}
+
+export type ReviewsCardType = {
+  commentProps: commentType
 }
 
 export type PrivateRouteProps = RouteProps & {

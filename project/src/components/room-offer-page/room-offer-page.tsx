@@ -1,31 +1,28 @@
-import {Dispatch} from 'react';
+import {Dispatch, useEffect} from 'react';
 import {useParams} from 'react-router-dom';
 
 import {connect, ConnectedProps} from 'react-redux';
 
 import {State} from '../../types/state';
 import {RoomOfferProps} from '../../types/types';
-import {Offers} from '../../types/offers';
-
-import {selectCityType, fillListType, fillList, selectCity} from '../../store/action';
 
 import CommentFormScreen from '../comment-form/comment-form';
 import ReviewsListScreen from '../reviews-list/reviews-list';
 import Map from '../map/map';
 import LoaderScreen from '../loader/loader';
 
+import {getComments} from '../../store/action';
 
-const mapStateToProps = ({titleCity, offers}: State) => ({
+
+const mapStateToProps = ({titleCity, offers, comments}: State) => ({
   titleCity,
-  offers: offers,
+  offers,
+  comments,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<selectCityType | fillListType>) => ({
-  onChangeCity(titleCity: string ) {
-    dispatch(selectCity(titleCity));
-  },
-  onLoad(offers: Offers) {
-    dispatch(fillList(offers));
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+  setComments(id: number) {
+    dispatch(getComments(id));
   },
 });
 
@@ -35,10 +32,13 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & RoomOfferProps;
 
 function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
-  const {offers} = props;
+  const {offers, setComments, comments} = props;
 
   const {id} = useParams<{id: string}>();
   const ourOffer= offers?.find((offer) => offer.id === Number(id));
+
+  useEffect(() => setComments(Number(id)),[]);
+
 
   if (!ourOffer) {
     return <div></div>;
@@ -48,7 +48,7 @@ function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
 
   const widthRating = `${(100 * rating)/5.0}%`;
 
-  return offers ? (
+  return offers && comments ? (
     <div className="page">
       <header className="header">
         <div className="container">
@@ -160,8 +160,10 @@ function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
                 </div>
               </div>
               <section className="property__reviews reviews">
-                <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">1</span></h2>
-                <ReviewsListScreen/>
+                <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{comments.length}</span></h2>
+                <ReviewsListScreen
+                  comments={comments}
+                />
                 <CommentFormScreen/>
               </section>
             </div>
