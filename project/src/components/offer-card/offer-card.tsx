@@ -1,15 +1,11 @@
-import { Dispatch } from 'react';
+import { Dispatch, memo } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { SelectOfferForMapType, SelectOfferForMap } from '../../store/action';
 import { Offer } from '../../types/offers';
-import { State } from '../../types/state';
 
 import {OfferCardProps} from '../../types/types';
 
-const mapStateToProps = ({activeOfferForMap}: State) => ({
-  activeOfferForMap,
-});
 
 const mapDispatchToProps = (dispatch: Dispatch<SelectOfferForMapType>) => ({
   selectOffer (offer: Offer) {
@@ -17,7 +13,7 @@ const mapDispatchToProps = (dispatch: Dispatch<SelectOfferForMapType>) => ({
   },
 });
 
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(null, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & OfferCardProps;
@@ -74,4 +70,4 @@ function OfferCardScreen(props : ConnectedComponentProps): JSX.Element {
 }
 
 export {OfferCardScreen};
-export default connector(OfferCardScreen);
+export default memo(connector(OfferCardScreen));

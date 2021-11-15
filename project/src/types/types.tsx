@@ -2,8 +2,6 @@ import {RouteProps} from 'react-router-dom';
 
 import {Offers, Offer} from './offers';
 
-import {AuthorizationStatus} from '../const';
-
 export type MainPageProps = {
   offerCount: number;
 }
@@ -30,7 +28,6 @@ export type RoomOfferProps = {
 
 export type PrivateRouteProps = RouteProps & {
   renderPage: () => JSX.Element;
-  authorization: AuthorizationStatus;
 }
 
 export type MapProps = {

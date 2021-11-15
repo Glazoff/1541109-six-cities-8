@@ -17,17 +17,14 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & PrivateRouteProps;
 
 function PrivateRoute(props: ConnectedComponentProps): JSX.Element {
-  const {exact, path, renderPage, authorization, authorizationStatus} = props;
-
-  // eslint-disable-next-line no-console
-  console.log(authorization);
+  const {exact, path, renderPage, authorizationStatus} = props;
 
   return (
     <Route
       exact={exact}
       path={path}
       render={() => (
-        authorizationStatus === false
+        authorizationStatus === true
           ? renderPage()
           : <Redirect to={AppRoute.SignIn}/>
       )}

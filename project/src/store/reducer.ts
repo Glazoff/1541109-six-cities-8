@@ -9,7 +9,7 @@ export const initialState: State = {
   titleCity: 'Paris',
   offers: null,
   activeOfferForMap: null,
-  authorizationStatus: true,
+  authorizationStatus: false,
   user: null,
 };
 

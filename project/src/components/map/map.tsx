@@ -54,7 +54,7 @@ function Map(props : ConnectedComponentProps): JSX.Element {
 
         marker
           .setIcon(
-            activeOfferForMap && point.title === activeOfferForMap.title
+            activeOfferForMap && point.location === activeOfferForMap.location
               ? currentCustomIcon
               : defaultCustomIcon,
           )

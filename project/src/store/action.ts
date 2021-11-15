@@ -4,6 +4,9 @@ import {userType} from '../types/user';
 import {parseOffers} from '../adapters/parse-offers';
 import {parseAuthInfo} from '../adapters/parse-authInfo';
 
+import {saveToken} from '../services/token';
+
+
 export enum ActionType {
   ChangeCity = 'main/changeCity',
   FillList = 'main/fillList',
@@ -13,6 +16,7 @@ export enum ActionType {
   SetUser = 'server/setUser',
   SelectOfferForMap = 'map/selectOffer',
 }
+
 
 export type selectCityType = {
   type: ActionType.ChangeCity,
@@ -34,6 +38,11 @@ export type getAuthType = {
   authorizationStatus: boolean;
 }
 
+export type setUserType = {
+  type: ActionType.SetUser,
+  user: userType,
+}
+
 export type responseType = {
   data: OffersForAdapterTypes;
 }
@@ -51,18 +60,22 @@ export const getAuthFromServer = () => (_dispatch: any, _getState: any, api: any
     .then();
 };
 
-export const sendAuthToServer = (email: string, password: string) => (_dispatch: any, _getState: any, api: any) => {
+export const sendAuthToServer = (email: string, password: string) => (dispatch: any, _getState: any, api: any) => {
   api.post('/login',{email, password})
     .then((response: any) => {
       if(response.status === 200) {
-        setUser(parseAuthInfo(response));
-        setAuth(true);
+        const formattedData = parseAuthInfo(response.data);
+
+        saveToken(formattedData.token);//todo
+        dispatch(setUser(formattedData));
+        dispatch(setAuth(true));
       }
     },
     );
 };
 
-export const setUser = (user: userType) => ({
+
+export const setUser = (user: userType):setUserType => ({
   type: ActionType.SetUser,
   user,
 });

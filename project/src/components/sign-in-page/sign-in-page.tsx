@@ -1,12 +1,15 @@
-/* eslint-disable no-console */
 import {Dispatch, useState} from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {sendAuthToServer} from '../../store/action';
-import {} from '../../types/state';
+import { Redirect, Route } from 'react-router-dom';
+import { State } from '../../types/state';
+import { AppRoute } from '../../const';
 
-const mapStateToProps = () => ({});
+const mapStateToProps = ({authorizationStatus}: State) => ({
+  authorizationStatus,
+});
 
-const mapDispatchToProps = (dispatch: Dispatch<>) => ({
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   setAuth(email: string, password: string) {
     dispatch(sendAuthToServer(email, password));
   },
@@ -18,13 +21,17 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux ;
 
 function SignInScreen(props: ConnectedComponentProps): JSX.Element {
-  const {setAuth} = props;
+  const {setAuth, authorizationStatus} = props;
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
 
-  return(
+  return authorizationStatus ?
+    <Route>
+      <Redirect to={AppRoute.Main}/>
+    </Route>
+    :
     <div className="page page--gray page--login">
       <header className="header">
         <div className="container">
@@ -71,7 +78,6 @@ function SignInScreen(props: ConnectedComponentProps): JSX.Element {
                 onClick={(evt) => {
                   evt.preventDefault();
                   setAuth(email, password);
-                  console.log(email, password);
                 }}
               >
                   Sign in
@@ -87,8 +93,7 @@ function SignInScreen(props: ConnectedComponentProps): JSX.Element {
           </section>
         </div>
       </main>
-    </div>
-  );
+    </div>;
 }
 
 export {SignInScreen};
