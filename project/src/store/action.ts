@@ -1,8 +1,10 @@
 import {Offer, Offers, OffersForAdapterTypes} from '../types/offers';
 import {userType} from '../types/user';
+import {commentsType} from '../types/comment';
 
 import {parseOffers} from '../adapters/parse-offers';
 import {parseAuthInfo} from '../adapters/parse-authInfo';
+import {parseComments} from '../adapters/parse-comments';
 
 import {saveToken} from '../services/token';
 
@@ -14,6 +16,7 @@ export enum ActionType {
   GetAuth = 'server/getAuth',
   SendAuth = 'server/sendAuth',
   SetUser = 'server/setUser',
+  SetComment = 'server/setComment',
   SelectOfferForMap = 'map/selectOffer',
 }
 
@@ -47,6 +50,11 @@ export type responseType = {
   data: OffersForAdapterTypes;
 }
 
+type setCommentsType = {
+  type: ActionType.SetComment,
+  comments: commentsType,
+}
+
 export const loadOffers = () => (dispatch: any, _getState: any, api: any) => {
   api.get('/hotels')
     .then((response: responseType) => {
@@ -66,13 +74,29 @@ export const sendAuthToServer = (email: string, password: string) => (dispatch: 
       if(response.status === 200) {
         const formattedData = parseAuthInfo(response.data);
 
-        saveToken(formattedData.token);//todo
+        saveToken(formattedData.token);
         dispatch(setUser(formattedData));
         dispatch(setAuth(true));
       }
     },
     );
 };
+
+export const getComments = (id: number) => (dispatch: any, _getState: any, api: any) => {
+  api.post(`/comments/${id}`)
+    .then((response: any) => {
+      if(response === 200) {
+        const formattedData = response.data;
+
+        dispatch(setComments(parseComments(formattedData)));
+      }
+    });
+};
+
+export const setComments = (comments: commentsType): setCommentsType => ({
+  type: ActionType.SetComment,
+  comments,
+});
 
 
 export const setUser = (user: userType):setUserType => ({

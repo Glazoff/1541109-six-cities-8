@@ -11,6 +11,7 @@ export const initialState: State = {
   activeOfferForMap: null,
   authorizationStatus: false,
   user: null,
+  comments: null,
 };
 
 export const reducer = (state: State = initialState, action: AnyAction): State => {
@@ -25,6 +26,8 @@ export const reducer = (state: State = initialState, action: AnyAction): State =
       return {...state, authorizationStatus: action.authorizationStatus};
     case ActionType.SetUser:
       return {...state, user: action.user};
+    case ActionType.SetComment:
+      return {...state, comments: action.comments};
     default:
       return state;
   }

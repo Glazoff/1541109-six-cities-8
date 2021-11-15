@@ -10,11 +10,14 @@ import {Offers} from '../../types/offers';
 import {selectCityType, fillListType, fillList, selectCity} from '../../store/action';
 
 import CommentFormScreen from '../comment-form/comment-form';
+import ReviewsListScreen from '../reviews-list/reviews-list';
+import Map from '../map/map';
+import LoaderScreen from '../loader/loader';
 
 
 const mapStateToProps = ({titleCity, offers}: State) => ({
   titleCity,
-  offers: offers?.filter((offer) => offer.city.nameCity === titleCity),
+  offers: offers,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<selectCityType | fillListType>) => ({
@@ -45,7 +48,7 @@ function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
 
   const widthRating = `${(100 * rating)/5.0}%`;
 
-  return(
+  return offers ? (
     <div className="page">
       <header className="header">
         <div className="container">
@@ -158,35 +161,16 @@ function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
               </div>
               <section className="property__reviews reviews">
                 <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">1</span></h2>
-                <ul className="reviews__list">
-                  <li className="reviews__item">
-                    <div className="reviews__user user">
-                      <div className="reviews__avatar-wrapper user__avatar-wrapper">
-                        <img className="reviews__avatar user__avatar" src="img/avatar-max.jpg" width="54" height="54" alt="Reviews avatar"/>
-                      </div>
-                      <span className="reviews__user-name">
-                        Max
-                      </span>
-                    </div>
-                    <div className="reviews__info">
-                      <div className="reviews__rating rating">
-                        <div className="reviews__stars rating__stars">
-                          <span style={{width: '80%'}}></span>
-                          <span className="visually-hidden">Rating</span>
-                        </div>
-                      </div>
-                      <p className="reviews__text">
-                        A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam. The building is green and from 18th century.
-                      </p>
-                      <time className="reviews__time" dateTime="2019-04-24">April 2019</time>
-                    </div>
-                  </li>
-                </ul>
+                <ReviewsListScreen/>
                 <CommentFormScreen/>
               </section>
             </div>
           </div>
-          <section className="property__map map"></section>
+          <section className="property__map map">
+            <Map
+              points={offers}
+            />
+          </section>
         </section>
         <div className="container">
           <section className="near-places places">
@@ -292,7 +276,7 @@ function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
         </div>
       </main>
     </div>
-  );
+  ): <LoaderScreen/>;
 }
 
 export {RoomOfferScreen};
