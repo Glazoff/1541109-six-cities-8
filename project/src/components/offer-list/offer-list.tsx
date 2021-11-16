@@ -2,11 +2,10 @@ import OfferCardScreen from '../offer-card/offer-card';
 
 import {OfferListProps} from '../../types/types';
 
-function OfferListScreen ({offers, isFavoritesPage} : OfferListProps): JSX.Element{
+function OfferListScreen ({offers, isFavoritesPage, isRoomOfferPage} : OfferListProps): JSX.Element{
 
-  return (
-    <div className={`${ isFavoritesPage ? 'favorites__places' : 'cities__places-list places__list tabs__content'}`}>
-
+  return isRoomOfferPage? (
+    <div className="near-places__list places__list">
       {
         offers.map((offer) => (
           <OfferCardScreen
@@ -17,9 +16,23 @@ function OfferListScreen ({offers, isFavoritesPage} : OfferListProps): JSX.Eleme
         ),
         )
       }
+    </div>)
+    :(
+      <div className={`${ isFavoritesPage ? 'favorites__places' : 'cities__places-list places__list tabs__content'}`}>
 
-    </div>
-  );
+        {
+          offers.map((offer) => (
+            <OfferCardScreen
+              offer={offer}
+              key={offer.id}
+              isFavoritesPage = {isFavoritesPage}
+            />
+          ),
+          )
+        }
+
+      </div>
+    );
 }
 
 export default OfferListScreen;

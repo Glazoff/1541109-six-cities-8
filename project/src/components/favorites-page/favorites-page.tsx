@@ -75,7 +75,7 @@ function FavoritesPageScreen (props : ConnectedComponentProps): JSX.Element {
                     </a>
                   </div>
                 </div>
-                <OfferListScreen offers={offers} isFavoritesPage/>
+                <OfferListScreen offers={offers} isFavoritesPage isRoomOfferPage={false}/>
               </li>
             </ul>
           </section>

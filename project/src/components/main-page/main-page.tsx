@@ -162,6 +162,7 @@ function MainPageScreen(props: ConnectedComponentProps): JSX.Element {
               <OfferListScreen
                 offers={offers}
                 isFavoritesPage={false}
+                isRoomOfferPage={false}
               />
             </section>
             <div className="cities__right-section">
