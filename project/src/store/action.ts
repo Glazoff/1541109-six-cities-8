@@ -17,6 +17,7 @@ export enum ActionType {
   SendAuth = 'server/sendAuth',
   SetUser = 'server/setUser',
   SetComment = 'server/setComment',
+  SetOffersNearby = 'server/setOffersNearby',
   SelectOfferForMap = 'map/selectOffer',
 }
 
@@ -53,6 +54,11 @@ export type responseType = {
 type setCommentsType = {
   type: ActionType.SetComment,
   comments: commentsType,
+}
+
+export type setHotelNearbyType = {
+  type: ActionType.SetOffersNearby,
+  offersNearby: Offers
 }
 
 export const loadOffers = () => (dispatch: any, _getState: any, api: any) => {
@@ -92,6 +98,23 @@ export const getComments = (id: number) => (dispatch: any, _getState: any, api: 
       }
     });
 };
+
+export const getHotelNearby = (id: number) => (dispatch: any, _getState: any, api: any) => {
+  api.get(`/hotels/:hotel_${id}/nearby`)
+    .then((response: any) => {
+      if(response.status === 200) {
+        const formattedData = parseOffers(response.data);
+
+        dispatch(setHotelNearby(formattedData));
+      }
+    });
+};
+
+
+export const setHotelNearby = (offersNearby: Offers): setHotelNearbyType => ({
+  type: ActionType.SetOffersNearby,
+  offersNearby,
+});
 
 export const setComments = (comments: commentsType): setCommentsType => ({
   type: ActionType.SetComment,

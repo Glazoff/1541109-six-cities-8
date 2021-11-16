@@ -11,7 +11,7 @@ import ReviewsListScreen from '../reviews-list/reviews-list';
 import Map from '../map/map';
 import LoaderScreen from '../loader/loader';
 
-import {getComments} from '../../store/action';
+import {getComments, getHotelNearby} from '../../store/action';
 
 
 const mapStateToProps = ({titleCity, offers, comments}: State) => ({
@@ -24,6 +24,9 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   setComments(id: number) {
     dispatch(getComments(id));
   },
+  setOffersNearby(id: number) {
+    dispatch(getHotelNearby(id));
+  },
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -32,12 +35,15 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & RoomOfferProps;
 
 function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
-  const {offers, setComments, comments} = props;
+  const {offers, setComments, comments, setOffersNearby} = props;
 
   const {id} = useParams<{id: string}>();
   const ourOffer= offers?.find((offer) => offer.id === Number(id));
 
-  useEffect(() => setComments(Number(id)),[]);
+  useEffect(() => {
+    setComments(Number(id));
+    setOffersNearby(Number(id));
+  },[]);
 
 
   if (!ourOffer) {

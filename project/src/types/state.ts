@@ -9,4 +9,5 @@ export type State = {
   authorizationStatus: boolean;
   user: userType| null;
   comments: commentsType| null;
+  offersNearby: Offers | null;
 }

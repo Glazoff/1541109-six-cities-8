@@ -12,6 +12,7 @@ export const initialState: State = {
   authorizationStatus: false,
   user: null,
   comments: null,
+  offersNearby: null,
 };
 
 export const reducer = (state: State = initialState, action: AnyAction): State => {
