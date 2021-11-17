@@ -15,10 +15,11 @@ import LoaderScreen from '../loader/loader';
 import {getComments, getHotelNearby} from '../../store/action';
 
 
-const mapStateToProps = ({titleCity, offers, comments}: State) => ({
+const mapStateToProps = ({titleCity, offers, comments, offersNearby}: State) => ({
   titleCity,
   offers,
   comments,
+  offersNearby,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
@@ -36,7 +37,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & RoomOfferProps;
 
 function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
-  const {offers, setComments, comments, setOffersNearby} = props;
+  const {offers, setComments, comments, setOffersNearby, offersNearby} = props;
 
   const {id} = useParams<{id: string}>();
   const ourOffer= offers?.find((offer) => offer.id === Number(id));
@@ -55,7 +56,7 @@ function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
 
   const widthRating = `${(100 * rating)/5.0}%`;
 
-  return offers && comments ? (
+  return offersNearby && comments ? (
     <div className="page">
       <header className="header">
         <div className="container">
@@ -177,7 +178,7 @@ function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
           </div>
           <section className="property__map map">
             <Map
-              points={offers}
+              points={offersNearby}
             />
           </section>
         </section>
@@ -186,7 +187,7 @@ function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
 
             <OfferListScreen
-              offers={offers}
+              offers={offersNearby}
               isFavoritesPage={false}
               isRoomOfferPage
             />

@@ -100,7 +100,7 @@ export const getComments = (id: number) => (dispatch: any, _getState: any, api: 
 };
 
 export const getHotelNearby = (id: number) => (dispatch: any, _getState: any, api: any) => {
-  api.get(`/hotels/:hotel_${id}/nearby`)
+  api.get(`/hotels/${id}/nearby`)
     .then((response: any) => {
       if(response.status === 200) {
         const formattedData = parseOffers(response.data);

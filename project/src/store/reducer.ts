@@ -29,6 +29,8 @@ export const reducer = (state: State = initialState, action: AnyAction): State =
       return {...state, user: action.user};
     case ActionType.SetComment:
       return {...state, comments: action.comments};
+    case ActionType.SetOffersNearby:
+      return {...state, offersNearby: action.offersNearby};
     default:
       return state;
   }
