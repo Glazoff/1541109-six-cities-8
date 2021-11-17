@@ -1,9 +1,14 @@
 import {ReviewsCardType} from '../../types/types';
 
+import moment from 'moment';
+
+
 function ReviewsCardScreen({commentProps}: ReviewsCardType): JSX.Element {
   const {comment, date, rating, user: {avatarUrl, name}} = commentProps;
 
   const widthRating = `${(100 * rating)/5.0}%`;
+
+  const formattedDate = moment(date).format('MMMM YYYY');
 
 
   return (
@@ -26,7 +31,7 @@ function ReviewsCardScreen({commentProps}: ReviewsCardType): JSX.Element {
         <p className="reviews__text">
           {comment}
         </p>
-        <time className="reviews__time" dateTime={String(date)}>{date}</time>
+        <time className="reviews__time" dateTime={String(date)}>{formattedDate}</time>
       </div>
     </li>
   );
