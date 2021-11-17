@@ -10,4 +10,5 @@ export type State = {
   user: userType| null;
   comments: commentsType| null;
   offersNearby: Offers | null;
+  selectOffer: Offer | null;
 }

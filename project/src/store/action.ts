@@ -5,6 +5,7 @@ import {commentsType} from '../types/comment';
 import {parseOffers} from '../adapters/parse-offers';
 import {parseAuthInfo} from '../adapters/parse-authInfo';
 import {parseComments} from '../adapters/parse-comments';
+import {parseOffer} from '../adapters/parse-offer';
 
 import {saveToken} from '../services/token';
 
@@ -18,6 +19,7 @@ export enum ActionType {
   SetUser = 'server/setUser',
   SetComment = 'server/setComment',
   SetOffersNearby = 'server/setOffersNearby',
+  SetSelectedOffer = 'server/setSelectOffer',
   SelectOfferForMap = 'map/selectOffer',
 }
 
@@ -59,6 +61,11 @@ type setCommentsType = {
 export type setHotelNearbyType = {
   type: ActionType.SetOffersNearby,
   offersNearby: Offers
+}
+
+export type setSelectOfferType = {
+  type: ActionType.SetSelectedOffer,
+  selectOffer: Offer,
 }
 
 export const loadOffers = () => (dispatch: any, _getState: any, api: any) => {
@@ -110,6 +117,28 @@ export const getHotelNearby = (id: number) => (dispatch: any, _getState: any, ap
     });
 };
 
+export const getHotel = (id: number) => (dispatch: any, _getState: any, api: any) => {
+  api.get(`/hotels/${id}`)
+    .then((response: any) => {
+      if(response.status === 200) {
+        const formatDate = parseOffer(response.data);
+
+        // eslint-disable-next-line no-console
+        console.log(formatDate);
+
+        dispatch(setSelectOffer(formatDate));
+      } else if (response.status === 404) {
+        // Тут отработать ошибка 404
+
+      }
+    });
+};
+
+
+export const setSelectOffer = (selectOffer: Offer): setSelectOfferType => ({
+  type: ActionType.SetSelectedOffer,
+  selectOffer,
+});
 
 export const setHotelNearby = (offersNearby: Offers): setHotelNearbyType => ({
   type: ActionType.SetOffersNearby,

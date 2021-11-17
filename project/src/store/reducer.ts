@@ -13,6 +13,7 @@ export const initialState: State = {
   user: null,
   comments: null,
   offersNearby: null,
+  selectOffer: null,
 };
 
 export const reducer = (state: State = initialState, action: AnyAction): State => {
@@ -31,6 +32,8 @@ export const reducer = (state: State = initialState, action: AnyAction): State =
       return {...state, comments: action.comments};
     case ActionType.SetOffersNearby:
       return {...state, offersNearby: action.offersNearby};
+    case ActionType.SetSelectedOffer:
+      return {...state, selectOffer: action.selectOffer};
     default:
       return state;
   }

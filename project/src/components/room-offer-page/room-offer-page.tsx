@@ -12,17 +12,21 @@ import Map from '../map/map';
 import OfferListScreen from '../offer-list/offer-list';
 import LoaderScreen from '../loader/loader';
 
-import {getComments, getHotelNearby} from '../../store/action';
+import {getComments, getHotelNearby, getHotel} from '../../store/action';
 
 
-const mapStateToProps = ({titleCity, offers, comments, offersNearby}: State) => ({
+const mapStateToProps = ({titleCity, offers, comments, offersNearby, selectOffer}: State) => ({
   titleCity,
   offers,
   comments,
   offersNearby,
+  selectOffer,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+  setOfferSelect(id: number) {
+    dispatch(getHotel(id));
+  },
   setComments(id: number) {
     dispatch(getComments(id));
   },
@@ -37,22 +41,22 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & RoomOfferProps;
 
 function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
-  const {offers, setComments, comments, setOffersNearby, offersNearby} = props;
+  const {setComments, comments, setOffersNearby, offersNearby, setOfferSelect, selectOffer} = props;
 
   const {id} = useParams<{id: string}>();
-  const ourOffer= offers?.find((offer) => offer.id === Number(id));
 
   useEffect(() => {
+    setOfferSelect(Number(id));
     setComments(Number(id));
     setOffersNearby(Number(id));
   },[]);
 
 
-  if (!ourOffer) {
+  if (!selectOffer) {
     return <div></div>;
   }
 
-  const {bedrooms, images, isPremium, title, rating, type, maxAdults, price, goods, host, description} = ourOffer;
+  const {bedrooms, images, isPremium, title, rating, type, maxAdults, price, goods, host, description} = selectOffer;
 
   const widthRating = `${(100 * rating)/5.0}%`;
 
