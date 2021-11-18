@@ -3,20 +3,19 @@ import {connect, ConnectedProps} from 'react-redux';
 import OfferListScreen from '../offer-list/offer-list';
 import LoaderScreen from '../loader/loader';
 import Map from '../map/map';
+import HeaderScreen from '../header/header';
 
 import {MainPageProps} from '../../types/types';
 import {State} from '../../types/state';
 
 import {selectCityType, fillListType, fillList, selectCity} from '../../store/action';
-import { Offers } from '../../types/offers';
-import { Dispatch } from 'react';
+import {Offers} from '../../types/offers';
+import {Dispatch} from 'react';
 
 
-const mapStateToProps = ({titleCity, offers, authorizationStatus, user}: State) => ({
+const mapStateToProps = ({titleCity, offers}: State) => ({
   titleCity,
   offers: offers?.filter((offer) => offer.city.nameCity === titleCity),
-  authorizationStatus,
-  user,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<selectCityType | fillListType>) => ({
@@ -34,48 +33,12 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & MainPageProps;
 
 function MainPageScreen(props: ConnectedComponentProps): JSX.Element {
-  const {offers, onChangeCity, titleCity, authorizationStatus, user} = props;
+  const {offers, onChangeCity, titleCity} = props;
 
 
   return offers ? (
     <div className="page page--gray page--main">
-      <header className="header">
-        <div className="container">
-          <div className="header__wrapper">
-            <div className="header__left">
-              <a className="header__logo-link header__logo-link--active" href="#">
-                <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41"/>
-              </a>
-            </div>
-            <nav className="header__nav">
-              {authorizationStatus ?
-                <ul className="header__nav-list">
-                  <li className="header__nav-item user">
-                    <a className="header__nav-link header__nav-link--profile" href="#">
-                      <div className="header__avatar-wrapper user__avatar-wrapper">
-                      </div>
-                      <span className="header__user-name user__name">{user?.email}</span>
-                    </a>
-                  </li>
-                  <li className="header__nav-item">
-                    <a className="header__nav-link" href="#">
-                      <span className="header__signout">Sign out</span>
-                    </a>
-                  </li>
-                </ul>:
-                <ul className="header__nav-list">
-                  <li className="header__nav-item user">
-                    <a className="header__nav-link header__nav-link--profile" href="#">
-                      <div className="header__avatar-wrapper user__avatar-wrapper">
-                      </div>
-                      <span className="header__login">Sign in</span>
-                    </a>
-                  </li>
-                </ul>}
-            </nav>
-          </div>
-        </div>
-      </header>
+      <HeaderScreen/>
 
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
