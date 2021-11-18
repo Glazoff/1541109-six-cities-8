@@ -14,11 +14,6 @@ import {reducer} from './store/reducer';
 
 import {loadOffers, getAuthFromServer, setAuth} from './store/action';
 
-
-const Setting = {
-  OFFER_COUNT: 212,
-};
-
 const onUnauthorized = () => {
   store.dispatch(setAuth(false));
 }; // функция отрабатывает случай неавторизованного пользователя
@@ -34,9 +29,7 @@ store.dispatch(getAuthFromServer());
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store} >
-      <App
-        offerCount = {Setting.OFFER_COUNT}
-      />
+      <App/>
     </Provider>
 
   </React.StrictMode>,

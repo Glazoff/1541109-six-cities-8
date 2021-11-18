@@ -13,14 +13,16 @@ import OfferListScreen from '../offer-list/offer-list';
 import LoaderScreen from '../loader/loader';
 
 import {getComments, getHotelNearby, getHotel} from '../../store/action';
+import Error404Screen from '../error-404-page/error-404-page';
 
 
-const mapStateToProps = ({titleCity, offers, comments, offersNearby, selectOffer}: State) => ({
+const mapStateToProps = ({titleCity, offers, comments, offersNearby, selectOffer, error404}: State) => ({
   titleCity,
   offers,
   comments,
   offersNearby,
   selectOffer,
+  error404,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
@@ -41,15 +43,22 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & RoomOfferProps;
 
 function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
-  const {setComments, comments, setOffersNearby, offersNearby, setOfferSelect, selectOffer} = props;
+  const {setComments, comments, setOffersNearby, offersNearby, setOfferSelect, selectOffer, error404} = props;
 
   const {id} = useParams<{id: string}>();
+
 
   useEffect(() => {
     setOfferSelect(Number(id));
     setComments(Number(id));
     setOffersNearby(Number(id));
   },[]);
+
+  if(error404) {
+    return(
+      <Error404Screen/>
+    );
+  }
 
 
   if (!selectOffer) {

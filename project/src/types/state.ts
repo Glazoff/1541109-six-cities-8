@@ -11,4 +11,5 @@ export type State = {
   comments: commentsType| null;
   offersNearby: Offers | null;
   selectOffer: Offer | null;
+  error404: boolean;
 }

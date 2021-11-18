@@ -14,6 +14,7 @@ export const initialState: State = {
   comments: null,
   offersNearby: null,
   selectOffer: null,
+  error404: false,
 };
 
 export const reducer = (state: State = initialState, action: AnyAction): State => {
@@ -34,6 +35,8 @@ export const reducer = (state: State = initialState, action: AnyAction): State =
       return {...state, offersNearby: action.offersNearby};
     case ActionType.SetSelectedOffer:
       return {...state, selectOffer: action.selectOffer};
+    case ActionType.SetError404:
+      return {...state, error404: action.error404};
     default:
       return state;
   }

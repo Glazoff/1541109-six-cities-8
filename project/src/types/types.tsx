@@ -5,7 +5,6 @@ import {Offers, Offer} from './offers';
 import {commentsType, commentType} from './comment';
 
 export type MainPageProps = {
-  offerCount: number;
 }
 
 export type AppProps = {

@@ -20,6 +20,7 @@ export enum ActionType {
   SetComment = 'server/setComment',
   SetOffersNearby = 'server/setOffersNearby',
   SetSelectedOffer = 'server/setSelectOffer',
+  SetError404 = 'server/setError404',
   SelectOfferForMap = 'map/selectOffer',
 }
 
@@ -67,6 +68,12 @@ export type setSelectOfferType = {
   type: ActionType.SetSelectedOffer,
   selectOffer: Offer,
 }
+
+export type setError404Type = {
+  type: ActionType.SetError404,
+  error404: boolean,
+}
+
 
 export const loadOffers = () => (dispatch: any, _getState: any, api: any) => {
   api.get('/hotels')
@@ -123,17 +130,21 @@ export const getHotel = (id: number) => (dispatch: any, _getState: any, api: any
       if(response.status === 200) {
         const formatDate = parseOffer(response.data);
 
-        // eslint-disable-next-line no-console
-        console.log(formatDate);
-
+        dispatch(setError404(false));
         dispatch(setSelectOffer(formatDate));
-      } else if (response.status === 404) {
-        // Тут отработать ошибка 404
-
       }
-    });
+    })
+    .catch((error: any) => {
+      if(error) {
+        dispatch(setError404(true));
+      }});
 };
 
+
+export const setError404 = (error404: boolean): setError404Type => ({
+  type: ActionType.SetError404,
+  error404,
+});
 
 export const setSelectOffer = (selectOffer: Offer): setSelectOfferType => ({
   type: ActionType.SetSelectedOffer,
