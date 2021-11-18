@@ -140,6 +140,15 @@ export const getHotel = (id: number) => (dispatch: any, _getState: any, api: any
       }});
 };
 
+export const deleteLogout = () => (dispatch: any, _getState: any, api: any) => {
+  api.delete('/logout')
+    .then((response: any) => {
+      if(response.status === 204) {
+        dispatch(setAuth(false));
+      }
+    });
+};
+
 
 export const setError404 = (error404: boolean): setError404Type => ({
   type: ActionType.SetError404,

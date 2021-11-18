@@ -1,9 +1,9 @@
 import {Dispatch, useState} from 'react';
-import { connect, ConnectedProps } from 'react-redux';
+import {connect, ConnectedProps} from 'react-redux';
 import {sendAuthToServer} from '../../store/action';
-import { Redirect, Route } from 'react-router-dom';
-import { State } from '../../types/state';
-import { AppRoute } from '../../const';
+import {Redirect, Route} from 'react-router-dom';
+import {State} from '../../types/state';
+import {AppRoute} from '../../const';
 
 const mapStateToProps = ({authorizationStatus}: State) => ({
   authorizationStatus,
