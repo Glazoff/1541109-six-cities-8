@@ -1,4 +1,3 @@
-import {Dispatch, useState} from 'react';
 import {connect, ConnectedProps} from 'react-redux';
 
 import OfferListScreen from '../offer-list/offer-list';
@@ -6,15 +5,18 @@ import LoaderScreen from '../loader/loader';
 import Map from '../map/map';
 
 import {MainPageProps} from '../../types/types';
-import {Offer, Offers} from '../../types/offers';
 import {State} from '../../types/state';
 
 import {selectCityType, fillListType, fillList, selectCity} from '../../store/action';
+import { Offers } from '../../types/offers';
+import { Dispatch } from 'react';
 
 
-const mapStateToProps = ({titleCity, offers}: State) => ({
+const mapStateToProps = ({titleCity, offers, authorizationStatus, user}: State) => ({
   titleCity,
-  offers: offers.filter((offer) => offer.city.nameCity === titleCity),
+  offers: offers?.filter((offer) => offer.city.nameCity === titleCity),
+  authorizationStatus,
+  user,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<selectCityType | fillListType>) => ({
@@ -32,13 +34,8 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & MainPageProps;
 
 function MainPageScreen(props: ConnectedComponentProps): JSX.Element {
-  const {offers, onChangeCity, titleCity} = props;
+  const {offers, onChangeCity, titleCity, authorizationStatus, user} = props;
 
-  const [selectPoint, setSelectPoint] = useState<Offer | null>(null);
-
-  const listItemHoverHandler = (offer: Offer) => {
-    setSelectPoint(offer);
-  };
 
   return offers ? (
     <div className="page page--gray page--main">
@@ -51,20 +48,30 @@ function MainPageScreen(props: ConnectedComponentProps): JSX.Element {
               </a>
             </div>
             <nav className="header__nav">
-              <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <a className="header__nav-link header__nav-link--profile" href="#">
-                    <div className="header__avatar-wrapper user__avatar-wrapper">
-                    </div>
-                    <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                  </a>
-                </li>
-                <li className="header__nav-item">
-                  <a className="header__nav-link" href="#">
-                    <span className="header__signout">Sign out</span>
-                  </a>
-                </li>
-              </ul>
+              {authorizationStatus ?
+                <ul className="header__nav-list">
+                  <li className="header__nav-item user">
+                    <a className="header__nav-link header__nav-link--profile" href="#">
+                      <div className="header__avatar-wrapper user__avatar-wrapper">
+                      </div>
+                      <span className="header__user-name user__name">{user?.email}</span>
+                    </a>
+                  </li>
+                  <li className="header__nav-item">
+                    <a className="header__nav-link" href="#">
+                      <span className="header__signout">Sign out</span>
+                    </a>
+                  </li>
+                </ul>:
+                <ul className="header__nav-list">
+                  <li className="header__nav-item user">
+                    <a className="header__nav-link header__nav-link--profile" href="#">
+                      <div className="header__avatar-wrapper user__avatar-wrapper">
+                      </div>
+                      <span className="header__login">Sign in</span>
+                    </a>
+                  </li>
+                </ul>}
             </nav>
           </div>
         </div>
@@ -155,15 +162,12 @@ function MainPageScreen(props: ConnectedComponentProps): JSX.Element {
               <OfferListScreen
                 offers={offers}
                 isFavoritesPage={false}
-                listItemHoverHandler={listItemHoverHandler}
               />
             </section>
             <div className="cities__right-section">
               <section className="cities__map map">
                 <Map
-                  offers={offers}
                   points={offers}
-                  selectPoint={selectPoint}
                 />
               </section>
             </div>

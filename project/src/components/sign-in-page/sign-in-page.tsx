@@ -1,5 +1,37 @@
-function SignInScreen(): JSX.Element {
-  return(
+import {Dispatch, useState} from 'react';
+import { connect, ConnectedProps } from 'react-redux';
+import {sendAuthToServer} from '../../store/action';
+import { Redirect, Route } from 'react-router-dom';
+import { State } from '../../types/state';
+import { AppRoute } from '../../const';
+
+const mapStateToProps = ({authorizationStatus}: State) => ({
+  authorizationStatus,
+});
+
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+  setAuth(email: string, password: string) {
+    dispatch(sendAuthToServer(email, password));
+  },
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type ConnectedComponentProps = PropsFromRedux ;
+
+function SignInScreen(props: ConnectedComponentProps): JSX.Element {
+  const {setAuth, authorizationStatus} = props;
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+
+  return authorizationStatus ?
+    <Route>
+      <Redirect to={AppRoute.Main}/>
+    </Route>
+    :
     <div className="page page--gray page--login">
       <header className="header">
         <div className="container">
@@ -20,13 +52,36 @@ function SignInScreen(): JSX.Element {
             <form className="login__form form" action="#" method="post">
               <div className="login__input-wrapper form__input-wrapper">
                 <label className="visually-hidden">E-mail</label>
-                <input className="login__input form__input" type="email" name="email" placeholder="Email" required/>
+                <input
+                  className="login__input form__input"
+                  type="email"
+                  name="email"
+                  placeholder="Email"
+                  required
+                  onChange={(evt) => setEmail(evt.target.value)}
+                />
               </div>
               <div className="login__input-wrapper form__input-wrapper">
                 <label className="visually-hidden">Password</label>
-                <input className="login__input form__input" type="password" name="password" placeholder="Password" required/>
+                <input
+                  className="login__input form__input"
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  required
+                  onChange={(evt) => setPassword(evt.target.value)}
+                />
               </div>
-              <button className="login__submit form__submit button" type="submit">Sign in</button>
+              <button
+                className="login__submit form__submit button"
+                type="submit"
+                onClick={(evt) => {
+                  evt.preventDefault();
+                  setAuth(email, password);
+                }}
+              >
+                  Sign in
+              </button>
             </form>
           </section>
           <section className="locations locations--login locations--current">
@@ -38,9 +93,9 @@ function SignInScreen(): JSX.Element {
           </section>
         </div>
       </main>
-    </div>
-  );
+    </div>;
 }
 
-export default SignInScreen;
+export {SignInScreen};
+export default connector(SignInScreen);
 

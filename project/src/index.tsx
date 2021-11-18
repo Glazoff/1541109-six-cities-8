@@ -12,7 +12,7 @@ import App from './components/app/app';
 
 import {reducer} from './store/reducer';
 
-import {loadOffers} from './store/action';
+import {loadOffers, getAuthFromServer, setAuth} from './store/action';
 
 
 const Setting = {
@@ -20,8 +20,7 @@ const Setting = {
 };
 
 const onUnauthorized = () => {
-  // eslint-disable-next-line no-console
-  console.log('Пользователь не авторизован');
+  store.dispatch(setAuth(false));
 }; // функция отрабатывает случай неавторизованного пользователя
 
 export const API = createAPI(onUnauthorized);
@@ -29,6 +28,8 @@ export const API = createAPI(onUnauthorized);
 export const store = createStore(reducer, composeWithDevTools(applyMiddleware(thunk.withExtraArgument(API))));
 
 store.dispatch(loadOffers());
+
+store.dispatch(getAuthFromServer());
 
 ReactDOM.render(
   <React.StrictMode>

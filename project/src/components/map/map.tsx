@@ -8,6 +8,9 @@ import {Icon, Marker} from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 import {MARKER_DEFAULT, MARKER_CURRENT} from '../../const';
+import { connect, ConnectedProps } from 'react-redux';
+import { State } from '../../types/state';
+
 
 const defaultCustomIcon = new Icon({
   iconUrl: MARKER_DEFAULT,
@@ -21,8 +24,23 @@ const currentCustomIcon = new Icon({
   iconAnchor: [20, 40],
 });
 
-function Map({offers, points, selectPoint} : MapProps): JSX.Element {
-  const city = offers[0].city;
+const mapStateToProps = ({activeOfferForMap, offers}: State) => ({
+  activeOfferForMap,
+  offers,
+});
+
+const connector = connect(mapStateToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type ConnectedComponentProps = PropsFromRedux & MapProps;
+
+function Map(props : ConnectedComponentProps): JSX.Element {
+  const {points, activeOfferForMap} = props;
+
+
+  const city = points[0].city;
+
+
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
 
@@ -36,14 +54,14 @@ function Map({offers, points, selectPoint} : MapProps): JSX.Element {
 
         marker
           .setIcon(
-            selectPoint && point.title === selectPoint.title
+            activeOfferForMap && point.location === activeOfferForMap.location
               ? currentCustomIcon
               : defaultCustomIcon,
           )
           .addTo(map);
       });
     }
-  }, [map, points, selectPoint]);
+  }, [map, points, activeOfferForMap]);
 
 
   return (
@@ -55,4 +73,5 @@ function Map({offers, points, selectPoint} : MapProps): JSX.Element {
   );
 }
 
-export default Map;
+export {Map};
+export default connector(Map);

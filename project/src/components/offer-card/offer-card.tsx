@@ -1,8 +1,26 @@
+import { Dispatch, memo } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { SelectOfferForMapType, SelectOfferForMap } from '../../store/action';
+import { Offer } from '../../types/offers';
 
 import {OfferCardProps} from '../../types/types';
 
-function OfferCardScreen({offer, onHoverHandler , isFavoritesPage} : OfferCardProps): JSX.Element {
+
+const mapDispatchToProps = (dispatch: Dispatch<SelectOfferForMapType>) => ({
+  selectOffer (offer: Offer) {
+    dispatch(SelectOfferForMap(offer));
+  },
+});
+
+const connector = connect(null, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type ConnectedComponentProps = PropsFromRedux & OfferCardProps;
+
+function OfferCardScreen(props : ConnectedComponentProps): JSX.Element {
+  const {offer , isFavoritesPage, selectOffer} = props;
+
   const {previewImage, isPremium, price, title, type, isFavorite, rating} = offer;
 
   const widthRating = `${(100 * rating)/5.0}%`;
@@ -10,7 +28,7 @@ function OfferCardScreen({offer, onHoverHandler , isFavoritesPage} : OfferCardPr
   const cardPath = `/offer/${offer.id}`;
 
   return (
-    <article onMouseEnter={onHoverHandler} className={`place-card ${isFavoritesPage? 'favorites__card' :'cities__place-card'}`}>
+    <article onMouseEnter={() => selectOffer(offer)} className={`place-card ${isFavoritesPage? 'favorites__card' :'cities__place-card'}`}>
       {isPremium &&(
         <div className="place-card__mark">
           <span>Premium</span>
@@ -51,4 +69,5 @@ function OfferCardScreen({offer, onHoverHandler , isFavoritesPage} : OfferCardPr
   );
 }
 
-export default OfferCardScreen;
+export {OfferCardScreen};
+export default memo(connector(OfferCardScreen));

@@ -1,12 +1,22 @@
-import {Offers, OffersForAdapterTypes} from '../types/offers';
+import {Offer, Offers, OffersForAdapterTypes} from '../types/offers';
+import {userType} from '../types/user';
 
 import {parseOffers} from '../adapters/parse-offers';
+import {parseAuthInfo} from '../adapters/parse-authInfo';
+
+import {saveToken} from '../services/token';
+
 
 export enum ActionType {
   ChangeCity = 'main/changeCity',
   FillList = 'main/fillList',
-  LoadOffers = 'server/loadOffers'
+  LoadOffers = 'server/loadOffers',
+  GetAuth = 'server/getAuth',
+  SendAuth = 'server/sendAuth',
+  SetUser = 'server/setUser',
+  SelectOfferForMap = 'map/selectOffer',
 }
+
 
 export type selectCityType = {
   type: ActionType.ChangeCity,
@@ -18,8 +28,19 @@ export type fillListType = {
   offers: Offers,
 }
 
-export type loadOffersType = {
-  type: ActionType.LoadOffers,
+export type SelectOfferForMapType = {
+  type: ActionType.SelectOfferForMap,
+  activeOfferForMap: Offer,
+}
+
+export type getAuthType = {
+  type: ActionType.GetAuth,
+  authorizationStatus: boolean;
+}
+
+export type setUserType = {
+  type: ActionType.SetUser,
+  user: userType,
 }
 
 export type responseType = {
@@ -27,14 +48,42 @@ export type responseType = {
 }
 
 export const loadOffers = () => (dispatch: any, _getState: any, api: any) => {
-  // eslint-disable-next-line no-console
-  console.log(api);
   api.get('/hotels')
     .then((response: responseType) => {
       const formattedData = parseOffers(response.data);
       dispatch(fillList(formattedData));
     });
 };
+
+export const getAuthFromServer = () => (_dispatch: any, _getState: any, api: any) => {
+  api.get('/login')
+    .then();
+};
+
+export const sendAuthToServer = (email: string, password: string) => (dispatch: any, _getState: any, api: any) => {
+  api.post('/login',{email, password})
+    .then((response: any) => {
+      if(response.status === 200) {
+        const formattedData = parseAuthInfo(response.data);
+
+        saveToken(formattedData.token);//todo
+        dispatch(setUser(formattedData));
+        dispatch(setAuth(true));
+      }
+    },
+    );
+};
+
+
+export const setUser = (user: userType):setUserType => ({
+  type: ActionType.SetUser,
+  user,
+});
+
+export const setAuth = (authorizationStatus: boolean): getAuthType => ({
+  type: ActionType.GetAuth,
+  authorizationStatus,
+});
 
 export const selectCity = (city: string): selectCityType => ({
   type: ActionType.ChangeCity,
@@ -46,4 +95,7 @@ export const fillList = (offers: Offers): fillListType => ({
   offers,
 });
 
-
+export const SelectOfferForMap = (offer: Offer): SelectOfferForMapType => ({
+  type: ActionType.SelectOfferForMap,
+  activeOfferForMap: offer,
+});

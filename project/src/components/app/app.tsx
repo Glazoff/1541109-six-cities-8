@@ -1,7 +1,7 @@
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 
 import {AppProps} from '../../types/types';
-import {AppRoute, AuthorizationStatus} from '../../const';
+import {AppRoute} from '../../const';
 
 import MainPageScreen from '../main-page/main-page';
 import SignInScreen from '../sign-in-page/sign-in-page';
@@ -29,7 +29,6 @@ function App({offerCount} : AppProps): JSX.Element {
           path={AppRoute.Favorites}
           exact
           renderPage={() => <FavoritesPageScreen/>}
-          authorizationStatus={AuthorizationStatus.Auth}
         >
         </PrivateRoute>
         <Route path={AppRoute.Room} exact>
