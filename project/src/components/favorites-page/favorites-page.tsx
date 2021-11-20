@@ -4,7 +4,6 @@ import {connect, ConnectedProps} from 'react-redux';
 import {FavoritesPageProps} from '../../types/types';
 import {State} from '../../types/state';
 
-import LoaderScreen from '../loader/loader';
 import OfferListScreen from '../offer-list/offer-list';
 import HeaderScreen from '../header/header';
 
@@ -55,7 +54,7 @@ function FavoritesPageScreen (props : ConnectedComponentProps): JSX.Element {
 
   useEffect(() => setOffersFavorites(),[]);
 
-  return offersFavorites ? (
+  return(
     <div className="page">
       <HeaderScreen/>
 
@@ -91,7 +90,7 @@ function FavoritesPageScreen (props : ConnectedComponentProps): JSX.Element {
         </a>
       </footer>
     </div>
-  ): <LoaderScreen/>;
+  );
 }
 
 export {FavoritesPageScreen};

@@ -24,6 +24,8 @@ export const reducer = (state: State = initialState, action: AnyAction): State =
       return {...state, titleCity:  action.city};
     case ActionType.FillList:
       return {...state, offers: action.offers};
+    case ActionType.SetHotelsFavorites:
+      return {...state, offersFavorites: action.offersFavorites};
     case ActionType.SelectOfferForMap:
       return {...state, activeOfferForMap: action.activeOfferForMap};
     case ActionType.GetAuth:
@@ -38,8 +40,6 @@ export const reducer = (state: State = initialState, action: AnyAction): State =
       return {...state, selectOffer: action.selectOffer};
     case ActionType.SetError404:
       return {...state, error404: action.error404};
-    case ActionType.SetHotelsFavorites:
-      return {...state, offersFavorites: action.offersFavorites};
     default:
       return state;
   }

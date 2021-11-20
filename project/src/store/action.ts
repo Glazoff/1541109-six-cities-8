@@ -77,7 +77,7 @@ export type setError404Type = {
 
 export type setTypeHotelsFavoritesType = {
   type: ActionType.SetHotelsFavorites,
-  offers: Offers,
+  offersFavorites: Offers,
 }
 
 export const loadOffers = () => (dispatch: any, _getState: any, api: any) => {
@@ -159,16 +159,28 @@ export const getHotelsFavorites = () => (dispatch: any, _getState: any, api: any
     .then((response: any) => {
       if(response.status === 200) {
         const formatDate = parseOffers(response.data);
+        // eslint-disable-next-line no-console
+        console.log(response);
 
         dispatch(setHotelsFavorites(formatDate));
       }
     });
 };
 
+export const setStatusFavorites = (id: number, numberStatus: number) => (dispatch: any, _getState: any, api: any) => {
+  api.post(`/favorite/${id}/${numberStatus}`)
+    .then((response: any) => {
+      if (response.status === 200) {
+        // eslint-disable-next-line no-console
+        console.log('сменили стату предложения'); //todo
+        loadOffers();
+      }
+    });
+};
 
-export const setHotelsFavorites = (offers: Offers): setTypeHotelsFavoritesType => ({
+export const setHotelsFavorites = (offersFavorites: Offers): setTypeHotelsFavoritesType => ({
   type: ActionType.SetHotelsFavorites,
-  offers,
+  offersFavorites,
 });
 
 
