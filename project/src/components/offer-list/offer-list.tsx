@@ -12,6 +12,7 @@ function OfferListScreen ({offers, isFavoritesPage, isRoomOfferPage} : OfferList
             offer={offer}
             key={offer.id}
             isFavoritesPage = {isFavoritesPage}
+            isRoomOfferPage
           />
         ),
         )
@@ -26,6 +27,7 @@ function OfferListScreen ({offers, isFavoritesPage, isRoomOfferPage} : OfferList
               offer={offer}
               key={offer.id}
               isFavoritesPage = {isFavoritesPage}
+              isRoomOfferPage={false}
             />
           ),
           )

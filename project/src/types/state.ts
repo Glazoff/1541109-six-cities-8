@@ -5,6 +5,7 @@ import {commentsType} from './comment';
 export type State = {
   titleCity: string;
   offers: Offers | null;
+  offersFavorites: Offers | null;
   activeOfferForMap: Offer | null;
   authorizationStatus: boolean;
   user: userType| null;

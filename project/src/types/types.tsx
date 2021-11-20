@@ -14,10 +14,11 @@ export type AppProps = {
 export type OfferCardProps = {
   offer: Offer;
   isFavoritesPage: boolean;
+  isRoomOfferPage: boolean;
 }
 
 export type OfferListProps = {
-  offers: Offers;
+  offers: Offers ;
   isFavoritesPage: boolean;
   isRoomOfferPage: boolean;
 }

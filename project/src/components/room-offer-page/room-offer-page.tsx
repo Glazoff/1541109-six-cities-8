@@ -4,6 +4,7 @@ import {useParams} from 'react-router-dom';
 import {connect, ConnectedProps} from 'react-redux';
 
 import {State} from '../../types/state';
+import {Offer} from '../../types/offers';
 import {RoomOfferProps} from '../../types/types';
 
 import CommentFormScreen from '../comment-form/comment-form';
@@ -13,7 +14,7 @@ import OfferListScreen from '../offer-list/offer-list';
 import LoaderScreen from '../loader/loader';
 import HeaderScreen from '../header/header';
 
-import {getComments, getHotelNearby, getHotel} from '../../store/action';
+import {getComments, getHotelNearby, getHotel, SelectOfferForMap} from '../../store/action';
 import Error404Screen from '../error-404-page/error-404-page';
 
 
@@ -21,8 +22,8 @@ const mapStateToProps = ({titleCity, offers, comments, offersNearby, selectOffer
   titleCity,
   offers,
   comments,
-  offersNearby,
   selectOffer,
+  offersNearby,
   error404,
 });
 
@@ -36,6 +37,9 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   setOffersNearby(id: number) {
     dispatch(getHotelNearby(id));
   },
+  selectOfferMap (offer: Offer) {
+    dispatch(SelectOfferForMap(offer));
+  },
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -44,7 +48,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & RoomOfferProps;
 
 function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
-  const {setComments, comments, setOffersNearby, offersNearby, setOfferSelect, selectOffer, error404} = props;
+  const {setComments, comments, setOffersNearby, offersNearby, setOfferSelect, selectOffer, error404, selectOfferMap} = props;
 
   const {id} = useParams<{id: string}>();
 
@@ -61,14 +65,19 @@ function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
     );
   }
 
-
   if (!selectOffer) {
     return <div></div>;
   }
 
+  selectOfferMap(selectOffer);
+
+
   const {bedrooms, images, isPremium, title, rating, type, maxAdults, price, goods, host, description} = selectOffer;
 
   const widthRating = `${(100 * rating)/5.0}%`;
+
+  offersNearby?.push(selectOffer);
+
 
   return offersNearby && comments ? (
     <div className="page">

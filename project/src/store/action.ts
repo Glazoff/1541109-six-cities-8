@@ -21,6 +21,7 @@ export enum ActionType {
   SetOffersNearby = 'server/setOffersNearby',
   SetSelectedOffer = 'server/setSelectOffer',
   SetError404 = 'server/setError404',
+  SetHotelsFavorites ='server/setHotelsServer',
   SelectOfferForMap = 'map/selectOffer',
 }
 
@@ -74,6 +75,10 @@ export type setError404Type = {
   error404: boolean,
 }
 
+export type setTypeHotelsFavoritesType = {
+  type: ActionType.SetHotelsFavorites,
+  offers: Offers,
+}
 
 export const loadOffers = () => (dispatch: any, _getState: any, api: any) => {
   api.get('/hotels')
@@ -148,6 +153,23 @@ export const deleteLogout = () => (dispatch: any, _getState: any, api: any) => {
       }
     });
 };
+
+export const getHotelsFavorites = () => (dispatch: any, _getState: any, api: any) => {
+  api.get('/favorite')
+    .then((response: any) => {
+      if(response.status === 200) {
+        const formatDate = parseOffers(response.data);
+
+        dispatch(setHotelsFavorites(formatDate));
+      }
+    });
+};
+
+
+export const setHotelsFavorites = (offers: Offers): setTypeHotelsFavoritesType => ({
+  type: ActionType.SetHotelsFavorites,
+  offers,
+});
 
 
 export const setError404 = (error404: boolean): setError404Type => ({

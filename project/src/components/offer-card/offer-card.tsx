@@ -1,11 +1,16 @@
+/* eslint-disable no-console */
 import { Dispatch, memo } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { SelectOfferForMapType, SelectOfferForMap } from '../../store/action';
 import { Offer } from '../../types/offers';
+import { State } from '../../types/state';
 
 import {OfferCardProps} from '../../types/types';
 
+const mapStateToProps = ({authorizationStatus}: State) => ({
+  authorizationStatus,
+});
 
 const mapDispatchToProps = (dispatch: Dispatch<SelectOfferForMapType>) => ({
   selectOffer (offer: Offer) {
@@ -13,13 +18,13 @@ const mapDispatchToProps = (dispatch: Dispatch<SelectOfferForMapType>) => ({
   },
 });
 
-const connector = connect(null, mapDispatchToProps);
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & OfferCardProps;
 
 function OfferCardScreen(props : ConnectedComponentProps): JSX.Element {
-  const {offer , isFavoritesPage, selectOffer} = props;
+  const {offer , isFavoritesPage, selectOffer, isRoomOfferPage} = props;
 
   const {previewImage, isPremium, price, title, type, isFavorite, rating} = offer;
 
@@ -28,7 +33,7 @@ function OfferCardScreen(props : ConnectedComponentProps): JSX.Element {
   const cardPath = `/offer/${offer.id}`;
 
   return (
-    <article onMouseEnter={() => selectOffer(offer)} className={`place-card ${isFavoritesPage? 'favorites__card' :'cities__place-card'}`}>
+    <article  onMouseEnter={() => isRoomOfferPage?null:selectOffer(offer)} className={`place-card ${isFavoritesPage? 'favorites__card' :'cities__place-card'}`}>
       {isPremium &&(
         <div className="place-card__mark">
           <span>Premium</span>
