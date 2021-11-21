@@ -1,4 +1,4 @@
-import {Dispatch, useState} from 'react';
+import {Dispatch, useRef} from 'react';
 import {connect, ConnectedProps} from 'react-redux';
 import {sendAuthToServer} from '../../store/action';
 import {Redirect, Route} from 'react-router-dom';
@@ -23,8 +23,15 @@ type ConnectedComponentProps = PropsFromRedux ;
 function SignInScreen(props: ConnectedComponentProps): JSX.Element {
   const {setAuth, authorizationStatus} = props;
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const emailInput = useRef<HTMLInputElement | HTMLButtonElement | null>(null);
+  const passwordInput = useRef<HTMLInputElement | HTMLButtonElement  | null>(null);
+
+  function sendAuth (email: any, password: any) {
+    if (email.current.value && password.current.value){
+
+      setAuth(email.current.value, password.current.value);
+    }
+  }
 
 
   return authorizationStatus ?
@@ -58,7 +65,7 @@ function SignInScreen(props: ConnectedComponentProps): JSX.Element {
                   name="email"
                   placeholder="Email"
                   required
-                  onChange={(evt) => setEmail(evt.target.value)}
+                  ref={(instance) => emailInput.current = instance}
                 />
               </div>
               <div className="login__input-wrapper form__input-wrapper">
@@ -69,7 +76,7 @@ function SignInScreen(props: ConnectedComponentProps): JSX.Element {
                   name="password"
                   placeholder="Password"
                   required
-                  onChange={(evt) => setPassword(evt.target.value)}
+                  ref={(instance) => passwordInput.current = instance}
                 />
               </div>
               <button
@@ -77,7 +84,7 @@ function SignInScreen(props: ConnectedComponentProps): JSX.Element {
                 type="submit"
                 onClick={(evt) => {
                   evt.preventDefault();
-                  setAuth(email, password);
+                  sendAuth(emailInput, passwordInput);
                 }}
               >
                   Sign in

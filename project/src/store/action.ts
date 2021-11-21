@@ -159,8 +159,6 @@ export const getHotelsFavorites = () => (dispatch: any, _getState: any, api: any
     .then((response: any) => {
       if(response.status === 200) {
         const formatDate = parseOffers(response.data);
-        // eslint-disable-next-line no-console
-        console.log(response);
 
         dispatch(setHotelsFavorites(formatDate));
       }

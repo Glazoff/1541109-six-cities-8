@@ -18,13 +18,14 @@ import {getComments, getHotelNearby, getHotel, SelectOfferForMap} from '../../st
 import Error404Screen from '../error-404-page/error-404-page';
 
 
-const mapStateToProps = ({titleCity, offers, comments, offersNearby, selectOffer, error404}: State) => ({
+const mapStateToProps = ({titleCity, offers, comments, offersNearby, selectOffer, error404, authorizationStatus}: State) => ({
   titleCity,
   offers,
   comments,
   selectOffer,
   offersNearby,
   error404,
+  authorizationStatus,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
@@ -48,7 +49,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & RoomOfferProps;
 
 function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
-  const {setComments, comments, setOffersNearby, offersNearby, setOfferSelect, selectOffer, error404, selectOfferMap} = props;
+  const {setComments, comments, setOffersNearby, offersNearby, setOfferSelect, selectOffer, error404, selectOfferMap, authorizationStatus} = props;
 
   const {id} = useParams<{id: string}>();
 
@@ -169,7 +170,8 @@ function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
                 <ReviewsListScreen
                   comments={comments}
                 />
-                <CommentFormScreen/>
+                {authorizationStatus?<CommentFormScreen/>: false}
+
               </section>
             </div>
           </div>
