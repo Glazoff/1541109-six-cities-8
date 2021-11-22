@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {Offer, Offers, OffersForAdapterTypes} from '../types/offers';
 import {userType} from '../types/user';
 import {commentsType} from '../types/comment';
@@ -102,9 +103,18 @@ export const loadOffers = () => (dispatch: any, _getState: any, api: any) => {
 };
 
 //временно убрал типы чтобы пропала ошибка в index
-export const getAuthFromServer = () => (_dispatch: any, _getState: any, api: any): void => {
+export const getAuthFromServer = () => (dispatch: any, _getState: any, api: any): void => {
   api.get('/login')
-    .then();//TODO исправляет ошибку? при перезагрузки Пример 101 строчка
+    .then((response: AxiosResponse) => {
+      console.log(response);
+      if(response.status === 200){
+        const formattedData = parseAuthInfo(response.data);
+        saveToken(formattedData.token);
+        dispatch(setUser(formattedData));
+        dispatch(setAuth(true));
+      } else {
+        dispatch(setAuth(false));
+      }});
 };
 
 export const sendAuthToServer = (email: string, password: string) => (dispatch: Dispatch, _getState: () => State, api: AxiosInstance): void => {
