@@ -13,4 +13,6 @@ export type State = {
   offersNearby: Offers | null;
   selectOffer: Offer | null;
   error404: boolean;
+  stateSortOffers: string | null;
+  sortOffers: Offer | null;
 }

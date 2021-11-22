@@ -4,6 +4,8 @@ import {State} from '../types/state';
 
 import {ActionType} from '../store/action';
 
+import {SortItemType} from '../const';
+
 
 export const initialState: State = {
   titleCity: 'Paris',
@@ -16,12 +18,15 @@ export const initialState: State = {
   offersNearby: null,
   selectOffer: null,
   error404: false,
+  //todo enum для состояния фильтрации
+  stateSortOffers: SortItemType.Popular,
+  sortOffers: null,
 };
 
 export const reducer = (state: State = initialState, action: AnyAction): State => {
   switch(action.type) {
     case ActionType.ChangeCity:
-      return {...state, titleCity:  action.city};
+      return {...state, titleCity:  action.city, stateSortOffers: action.sortType};
     case ActionType.FillList:
       return {...state, offers: action.offers};
     case ActionType.SetHotelsFavorites:
@@ -40,6 +45,8 @@ export const reducer = (state: State = initialState, action: AnyAction): State =
       return {...state, selectOffer: action.selectOffer};
     case ActionType.SetError404:
       return {...state, error404: action.error404};
+    case ActionType.SelectStateSort:
+      return {...state, stateSortOffers: action.sortType};
     default:
       return state;
   }

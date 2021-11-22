@@ -1,5 +1,5 @@
 import {Dispatch, useEffect} from 'react';
-import {useParams} from 'react-router-dom';
+import {useHistory, useParams} from 'react-router-dom';
 
 import {connect, ConnectedProps} from 'react-redux';
 
@@ -14,8 +14,9 @@ import OfferListScreen from '../offer-list/offer-list';
 import LoaderScreen from '../loader/loader';
 import HeaderScreen from '../header/header';
 
-import {getComments, getHotelNearby, getHotel, SelectOfferForMap} from '../../store/action';
+import {getComments, getHotelNearby, getHotel, SelectOfferForMap, setStatusFavorites} from '../../store/action';
 import Error404Screen from '../error-404-page/error-404-page';
+import { AppRoute } from '../../const';
 
 
 const mapStateToProps = ({titleCity, offers, comments, offersNearby, selectOffer, error404, authorizationStatus}: State) => ({
@@ -41,6 +42,9 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   selectOfferMap (offer: Offer) {
     dispatch(SelectOfferForMap(offer));
   },
+  setStatusFavoritesOffer(id: number, numberStatus: number) {
+    dispatch(setStatusFavorites(id, numberStatus));
+  },
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -49,9 +53,11 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & RoomOfferProps;
 
 function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
-  const {setComments, comments, setOffersNearby, offersNearby, setOfferSelect, selectOffer, error404, selectOfferMap, authorizationStatus} = props;
+  const {setComments, comments, setOffersNearby, offersNearby, setOfferSelect, selectOffer, error404, selectOfferMap, authorizationStatus, setStatusFavoritesOffer} = props;
 
   const {id} = useParams<{id: string}>();
+
+  const history = useHistory();
 
 
   useEffect(() => {
@@ -73,7 +79,7 @@ function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
   selectOfferMap(selectOffer);
 
 
-  const {bedrooms, images, isPremium, title, rating, type, maxAdults, price, goods, host, description} = selectOffer;
+  const {bedrooms, images, isPremium, title, rating, type, maxAdults, price, goods, host, description, isFavorite} = selectOffer;
 
   const widthRating = `${(100 * rating)/5.0}%`;
 
@@ -105,12 +111,34 @@ function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
                 <h1 className="property__name">
                   {title}
                 </h1>
-                <button className="property__bookmark-button button" type="button">
-                  <svg className="property__bookmark-icon" width="31" height="33">
-                    <use xlinkHref="#icon-bookmark"></use>
-                  </svg>
-                  <span className="visually-hidden">To bookmarks</span>
-                </button>
+
+                {isFavorite?
+                  <button
+                    className="property__bookmark-button button property__bookmark-button--active"
+                    type="button"
+                    onClick={() => authorizationStatus?
+                      setStatusFavoritesOffer(selectOffer.id, 0):
+                      history.push(AppRoute.SignIn)}
+                  >
+                    <svg className="property__bookmark-icon" width="31" height="33">
+                      <use xlinkHref="#icon-bookmark"></use>
+                    </svg>
+                    <span className="visually-hidden">To bookmarks</span>
+                  </button>:
+                  <button
+                    className="property__bookmark-button button"
+                    type="button"
+                    onClick={() => authorizationStatus?
+                      setStatusFavoritesOffer(selectOffer.id, 1):
+                      history.push(AppRoute.SignIn)}
+                  >
+                    <svg className="property__bookmark-icon" width="31" height="33">
+                      <use xlinkHref="#icon-bookmark"></use>
+                    </svg>
+                    <span className="visually-hidden">To bookmarks</span>
+                  </button>}
+
+
               </div>
               <div className="property__rating rating">
                 <div className="property__stars rating__stars">
@@ -170,7 +198,7 @@ function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
                 <ReviewsListScreen
                   comments={comments}
                 />
-                {authorizationStatus?<CommentFormScreen/>: false}
+                {authorizationStatus?<CommentFormScreen id={id}/>: false}
 
               </section>
             </div>

@@ -58,7 +58,19 @@ function FavoritesPageScreen (props : ConnectedComponentProps): JSX.Element {
     <div className="page">
       <HeaderScreen/>
 
-      {offersFavorites?
+      {offersFavorites?.length === 0?
+        <main className="page__main page__main--favorites page__main--favorites-empty">
+          <div className="page__favorites-container container">
+            <section className="favorites favorites--empty">
+              <h1 className="visually-hidden">Favorites (empty)</h1>
+              <div className="favorites__status-wrapper">
+                <b className="favorites__status">Nothing yet saved.</b>
+                <p className="favorites__status-description">Save properties to narrow down search or plan your future trips.</p>
+              </div>
+            </section>
+          </div>
+        </main>
+        :
         <main className="page__main page__main--favorites">
           <div className="page__favorites-container container">
             <section className="favorites">
@@ -68,18 +80,6 @@ function FavoritesPageScreen (props : ConnectedComponentProps): JSX.Element {
                 {cities}
 
               </ul>
-            </section>
-          </div>
-        </main>
-        :
-        <main className="page__main page__main--favorites page__main--favorites-empty">
-          <div className="page__favorites-container container">
-            <section className="favorites favorites--empty">
-              <h1 className="visually-hidden">Favorites (empty)</h1>
-              <div className="favorites__status-wrapper">
-                <b className="favorites__status">Nothing yet saved.</b>
-                <p className="favorites__status-description">Save properties to narrow down search or plan your future trips.</p>
-              </div>
             </section>
           </div>
         </main>}

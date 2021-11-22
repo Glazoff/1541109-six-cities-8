@@ -9,6 +9,12 @@ import {parseOffer} from '../adapters/parse-offer';
 
 import {saveToken} from '../services/token';
 
+import {Dispatch, Action} from 'redux';
+import {ThunkAction} from 'redux-thunk';
+import { State } from '../types/state';
+import { AxiosInstance , AxiosResponse} from 'axios';
+import { SortItemType } from '../const';
+
 
 export enum ActionType {
   ChangeCity = 'main/changeCity',
@@ -23,12 +29,14 @@ export enum ActionType {
   SetError404 = 'server/setError404',
   SetHotelsFavorites ='server/setHotelsServer',
   SelectOfferForMap = 'map/selectOffer',
+  SelectStateSort = 'main/selectStateSort',
 }
 
 
 export type selectCityType = {
   type: ActionType.ChangeCity,
   city: string,
+  sortType: SortItemType,
 }
 
 export type fillListType = {
@@ -80,6 +88,11 @@ export type setTypeHotelsFavoritesType = {
   offersFavorites: Offers,
 }
 
+export type selectStateSortType = {
+  type: ActionType.SelectStateSort,
+  sortType: string,
+}
+//временно убрал типы чтобы пропала ошибка в index
 export const loadOffers = () => (dispatch: any, _getState: any, api: any) => {
   api.get('/hotels')
     .then((response: responseType) => {
@@ -88,14 +101,15 @@ export const loadOffers = () => (dispatch: any, _getState: any, api: any) => {
     });
 };
 
-export const getAuthFromServer = () => (_dispatch: any, _getState: any, api: any) => {
+//временно убрал типы чтобы пропала ошибка в index
+export const getAuthFromServer = () => (_dispatch: any, _getState: any, api: any): void => {
   api.get('/login')
-    .then();
+    .then();//TODO исправляет ошибку? при перезагрузки Пример 101 строчка
 };
 
-export const sendAuthToServer = (email: string, password: string) => (dispatch: any, _getState: any, api: any) => {
+export const sendAuthToServer = (email: string, password: string) => (dispatch: Dispatch, _getState: () => State, api: AxiosInstance): void => {
   api.post('/login',{email, password})
-    .then((response: any) => {
+    .then((response: AxiosResponse) => {
       if(response.status === 200) {
         const formattedData = parseAuthInfo(response.data);
 
@@ -107,9 +121,9 @@ export const sendAuthToServer = (email: string, password: string) => (dispatch: 
     );
 };
 
-export const getComments = (id: number) => (dispatch: any, _getState: any, api: any) => {
+export const getComments = (id: number) => (dispatch: Dispatch, _getState: () => State, api: AxiosInstance): void => {
   api.get(`/comments/${id}`)
-    .then((response: any) => {
+    .then((response: AxiosResponse) => {
       if(response.status === 200) {
         const formattedData = response.data;
 
@@ -118,9 +132,9 @@ export const getComments = (id: number) => (dispatch: any, _getState: any, api: 
     });
 };
 
-export const getHotelNearby = (id: number) => (dispatch: any, _getState: any, api: any) => {
+export const getHotelNearby = (id: number) => (dispatch: Dispatch, _getState: () => State, api: AxiosInstance): void => {
   api.get(`/hotels/${id}/nearby`)
-    .then((response: any) => {
+    .then((response: AxiosResponse) => {
       if(response.status === 200) {
         const formattedData = parseOffers(response.data);
 
@@ -129,9 +143,9 @@ export const getHotelNearby = (id: number) => (dispatch: any, _getState: any, ap
     });
 };
 
-export const getHotel = (id: number) => (dispatch: any, _getState: any, api: any) => {
+export const getHotel = (id: number) => (dispatch: Dispatch, _getState: () => State, api: AxiosInstance): void => {
   api.get(`/hotels/${id}`)
-    .then((response: any) => {
+    .then((response: AxiosResponse) => {
       if(response.status === 200) {
         const formatDate = parseOffer(response.data);
 
@@ -139,24 +153,24 @@ export const getHotel = (id: number) => (dispatch: any, _getState: any, api: any
         dispatch(setSelectOffer(formatDate));
       }
     })
-    .catch((error: any) => {
+    .catch((error: AxiosResponse) => {
       if(error) {
         dispatch(setError404(true));
       }});
 };
 
-export const deleteLogout = () => (dispatch: any, _getState: any, api: any) => {
+export const deleteLogout = () => (dispatch: Dispatch, _getState: () => State, api: AxiosInstance): void => {
   api.delete('/logout')
-    .then((response: any) => {
+    .then((response: AxiosResponse) => {
       if(response.status === 204) {
         dispatch(setAuth(false));
       }
     });
 };
 
-export const getHotelsFavorites = () => (dispatch: any, _getState: any, api: any) => {
+export const getHotelsFavorites = () => (dispatch: Dispatch, _getState: () => State, api: AxiosInstance): void => {
   api.get('/favorite')
-    .then((response: any) => {
+    .then((response: AxiosResponse) => {
       if(response.status === 200) {
         const formatDate = parseOffers(response.data);
 
@@ -165,9 +179,9 @@ export const getHotelsFavorites = () => (dispatch: any, _getState: any, api: any
     });
 };
 
-export const setStatusFavorites = (id: number, numberStatus: number) => (dispatch: any, _getState: any, api: any) => {
+export const setStatusFavorites = (id: number, numberStatus: number):ThunkAction<void, State, AxiosInstance, Action> => (_dispatch: Dispatch, _getState: () => State, api: AxiosInstance): void => {
   api.post(`/favorite/${id}/${numberStatus}`)
-    .then((response: any) => {
+    .then((response: AxiosResponse) => {
       if (response.status === 200) {
         // eslint-disable-next-line no-console
         console.log('сменили стату предложения'); //todo
@@ -175,6 +189,19 @@ export const setStatusFavorites = (id: number, numberStatus: number) => (dispatc
       }
     });
 };
+
+export const sendCommentOffer = (id: number, comment: string, rating: number) =>(_dispatch: Dispatch, _getState: () => State, api: AxiosInstance): void => {
+  api.post(`/comments/${id}`, {comment, rating})
+    .then((response:AxiosResponse) => {
+
+      if(response.status === 200){
+        //TODO
+        // eslint-disable-next-line no-console
+        console.log('комментарий отправлен');
+      }
+    });
+};
+
 
 export const setHotelsFavorites = (offersFavorites: Offers): setTypeHotelsFavoritesType => ({
   type: ActionType.SetHotelsFavorites,
@@ -216,6 +243,7 @@ export const setAuth = (authorizationStatus: boolean): getAuthType => ({
 export const selectCity = (city: string): selectCityType => ({
   type: ActionType.ChangeCity,
   city,
+  sortType: SortItemType.Popular,
 });
 
 export const fillList = (offers: Offers): fillListType => ({
@@ -226,4 +254,10 @@ export const fillList = (offers: Offers): fillListType => ({
 export const SelectOfferForMap = (offer: Offer): SelectOfferForMapType => ({
   type: ActionType.SelectOfferForMap,
   activeOfferForMap: offer,
+});
+
+
+export const selectStateSort = (sortType: SortItemType): selectStateSortType => ({
+  type: ActionType.SelectStateSort,
+  sortType,
 });
