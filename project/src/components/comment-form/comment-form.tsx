@@ -2,6 +2,7 @@
 import { Dispatch, useState} from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {sendCommentOffer} from '../../store/action';
+import { State } from '../../types/state';
 
 const COUNT_RATING = [
   {star: 5},
@@ -15,22 +16,31 @@ type CommentFormProps = {
   id: string,
 }
 
+const mapStateToProps = ({isCommentLoading}: State) => ({
+  isCommentLoading,
+});
+
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   sendComment(id: number, comment: string, rating: number) {
     dispatch(sendCommentOffer(id, comment, rating));
   },
 });
 
-const connector = connect(null, mapDispatchToProps);
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & CommentFormProps;
 
 function CommentFormScreen(props: ConnectedComponentProps): JSX.Element {
-  const {id, sendComment} = props;
+  const {id, sendComment, isCommentLoading} = props;
 
   const [rating, setRating] = useState('');
   const [comment, setComment] = useState('');
+
+  const resetCommentForm = () => {
+    setRating('');
+    setComment('');
+  };
 
 
   return (
@@ -43,12 +53,13 @@ function CommentFormScreen(props: ConnectedComponentProps): JSX.Element {
           COUNT_RATING.map((ratingNumber) => (
             <>
               <input
-                onChange={(evt) => {setRating(evt.target.value); } }
+                onChange={(evt) => {setRating(evt.target.value);}}
                 className="form__rating-input visually-hidden"
-                name="rating"
+                name={'rating'}
                 value={ratingNumber.star}
                 id={`${ratingNumber.star}-stars`}
                 type="radio"
+                checked={String(ratingNumber.star) === rating}
               />
               <label htmlFor={`${ratingNumber.star}-stars`} className="reviews__rating-label form__rating-label" title="perfect">
                 <svg className="form__star-image" width="37" height="33">
@@ -66,7 +77,8 @@ function CommentFormScreen(props: ConnectedComponentProps): JSX.Element {
         id="review"
         name="review"
         placeholder="Tell how was your stay, what you like and what can be improved"
-        // disabled={false} ToDO
+        value={comment}
+        disabled={isCommentLoading}
       >
       </textarea>
 
@@ -78,13 +90,14 @@ function CommentFormScreen(props: ConnectedComponentProps): JSX.Element {
           onClick={(evt) => {
             evt.preventDefault();
             sendComment(Number(id),comment, Number(rating));
+            resetCommentForm();
             console.log('rating', rating);
             console.log('comment', comment);
           }}
           className="reviews__submit form__submit button"
           type="submit"
           // {/*TODO* не забыть добавить сюда статус отправки/}
-          disabled={comment.length < 50 || comment.length > 300 || rating === ''}
+          disabled={comment.length < 50 || comment.length > 300 || rating === '' || isCommentLoading}
         >
           Submit
         </button>

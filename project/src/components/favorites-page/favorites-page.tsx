@@ -9,8 +9,7 @@ import HeaderScreen from '../header/header';
 
 import {getHotelsFavorites} from '../../store/action';
 
-const mapStateToProps = ({offers,offersFavorites}: State) => ({
-  offers,
+const mapStateToProps = ({offersFavorites}: State) => ({
   offersFavorites,
 });
 
@@ -29,7 +28,18 @@ type ConnectedComponentProps = PropsFromRedux & FavoritesPageProps;
 function FavoritesPageScreen (props : ConnectedComponentProps): JSX.Element {
   const {setOffersFavorites, offersFavorites} = props;
 
-  const citiesSet = new Set(offersFavorites?.map((offer) => offer.city.nameCity));
+  useEffect(() => setOffersFavorites(),[]);
+
+
+  // eslint-disable-next-line no-console
+  console.log(offersFavorites);
+
+  const offers = offersFavorites?.filter((offer) => offer.isFavorite);
+
+  // eslint-disable-next-line no-debugger
+  // debugger;
+
+  const citiesSet = new Set(offers?.map((offer) => offer.city.nameCity));
 
   const cities = [...citiesSet].sort().map((city) => (
     <li key={city} className="favorites__locations-items">
@@ -41,9 +51,9 @@ function FavoritesPageScreen (props : ConnectedComponentProps): JSX.Element {
         </div>
       </div>
       {
-        offersFavorites?
+        offers?
           <OfferListScreen
-            offers={offersFavorites?.filter((offer) => offer.city.nameCity === city)}
+            offers={offers?.filter((offer) => offer.city.nameCity === city)}
             isFavoritesPage
             isRoomOfferPage={false}
           />:
@@ -52,13 +62,12 @@ function FavoritesPageScreen (props : ConnectedComponentProps): JSX.Element {
     </li>
   ));
 
-  useEffect(() => setOffersFavorites(),[]);
 
   return(
     <div className="page">
       <HeaderScreen/>
 
-      {offersFavorites?.length === 0?
+      {offers?.length === 0?
         <main className="page__main page__main--favorites page__main--favorites-empty">
           <div className="page__favorites-container container">
             <section className="favorites favorites--empty">

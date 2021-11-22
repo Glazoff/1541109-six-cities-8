@@ -17,8 +17,10 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   selectOffer (offer: Offer) {
     dispatch(SelectOfferForMap(offer));
   },
-  setStatusFavoritesOffer(id: number, numberStatus: number) {
-    dispatch(setStatusFavorites(id, numberStatus));
+  setStatusFavoritesOffer(id: number, numberStatus: number, isFavoritesPage: boolean) {
+    dispatch(setStatusFavorites(id, numberStatus, isFavoritesPage));
+    // eslint-disable-next-line no-debugger
+    // debugger;
   },
 });
 
@@ -61,7 +63,7 @@ function OfferCardScreen(props : ConnectedComponentProps): JSX.Element {
               className={'place-card__bookmark-button button place-card__bookmark-button--active'}
               type="button"
               onClick={() => authorizationStatus?
-                setStatusFavoritesOffer(offer.id, 0):
+                setStatusFavoritesOffer(offer.id, 0, isFavoritesPage):
                 history.push(AppRoute.SignIn)}
             >
               <svg className="place-card__bookmark-icon" width="18" height="19">
@@ -73,7 +75,7 @@ function OfferCardScreen(props : ConnectedComponentProps): JSX.Element {
               className={'place-card__bookmark-button button'}
               type="button"
               onClick={() => authorizationStatus?
-                setStatusFavoritesOffer(offer.id, 1):
+                setStatusFavoritesOffer(offer.id, 1, isFavoritesPage):
                 history.push(AppRoute.SignIn)}
             >
               <svg className="place-card__bookmark-icon" width="18" height="19">

@@ -21,6 +21,7 @@ export const initialState: State = {
   //todo enum для состояния фильтрации
   stateSortOffers: SortItemType.Popular,
   sortOffers: null,
+  isCommentLoading: false,
 };
 
 export const reducer = (state: State = initialState, action: AnyAction): State => {
@@ -47,6 +48,8 @@ export const reducer = (state: State = initialState, action: AnyAction): State =
       return {...state, error404: action.error404};
     case ActionType.SelectStateSort:
       return {...state, stateSortOffers: action.sortType};
+    case ActionType.CommentLoading:
+      return {...state,  isCommentLoading:  action.isCommentLoading};
     default:
       return state;
   }

@@ -15,4 +15,5 @@ export type State = {
   error404: boolean;
   stateSortOffers: string | null;
   sortOffers: Offer | null;
+  isCommentLoading: boolean;
 }

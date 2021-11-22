@@ -14,7 +14,7 @@ import OfferListScreen from '../offer-list/offer-list';
 import LoaderScreen from '../loader/loader';
 import HeaderScreen from '../header/header';
 
-import {getComments, getHotelNearby, getHotel, SelectOfferForMap, setStatusFavorites} from '../../store/action';
+import {getComments, getHotelNearby, getHotel, SelectOfferForMap, updateRoomOffer} from '../../store/action';
 import Error404Screen from '../error-404-page/error-404-page';
 import { AppRoute } from '../../const';
 
@@ -43,7 +43,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
     dispatch(SelectOfferForMap(offer));
   },
   setStatusFavoritesOffer(id: number, numberStatus: number) {
-    dispatch(setStatusFavorites(id, numberStatus));
+    dispatch(updateRoomOffer(id, numberStatus));
   },
 });
 

@@ -31,6 +31,8 @@ export enum ActionType {
   SetHotelsFavorites ='server/setHotelsServer',
   SelectOfferForMap = 'map/selectOffer',
   SelectStateSort = 'main/selectStateSort',
+  SetHotelFavorites = 'main/setHotelFavorites',
+  CommentLoading = 'server/setCommentLoading',
 }
 
 
@@ -106,7 +108,6 @@ export const loadOffers = () => (dispatch: any, _getState: any, api: any) => {
 export const getAuthFromServer = () => (dispatch: any, _getState: any, api: any): void => {
   api.get('/login')
     .then((response: AxiosResponse) => {
-      console.log(response);
       if(response.status === 200){
         const formattedData = parseAuthInfo(response.data);
         saveToken(formattedData.token);
@@ -189,28 +190,72 @@ export const getHotelsFavorites = () => (dispatch: Dispatch, _getState: () => St
     });
 };
 
-export const setStatusFavorites = (id: number, numberStatus: number):ThunkAction<void, State, AxiosInstance, Action> => (_dispatch: Dispatch, _getState: () => State, api: AxiosInstance): void => {
+export const setStatusFavorites = (id: number, numberStatus: number, isFavoritesPage: boolean):ThunkAction<void, State, AxiosInstance, Action> => (dispatch: Dispatch, getState: () => State, api: AxiosInstance): void => {
+  const {offers: allOffers, offersFavorites} = getState();
+  const offers = isFavoritesPage? offersFavorites: allOffers;
+
   api.post(`/favorite/${id}/${numberStatus}`)
     .then((response: AxiosResponse) => {
       if (response.status === 200) {
-        // eslint-disable-next-line no-console
-        console.log('сменили стату предложения'); //todo
-        loadOffers();
+        const updatedOffer =  parseOffer(response.data);
+        const updatedOfferIndex = offers?.findIndex((offer) => offer.id === updatedOffer.id);
+        const isUpdateOffers = offers && (updatedOfferIndex !== undefined);
+
+        if (isUpdateOffers) {
+          offers.splice(updatedOfferIndex, 1, updatedOffer);
+          if(isFavoritesPage){
+            dispatch(setHotelsFavorites(offers));
+          } else {
+            dispatch(fillList(offers));
+          }
+        }
       }
     });
 };
 
-export const sendCommentOffer = (id: number, comment: string, rating: number) =>(_dispatch: Dispatch, _getState: () => State, api: AxiosInstance): void => {
+export const updateRoomOffer = (id: number, numberStatus: number):ThunkAction<void, State, AxiosInstance, Action> => (dispatch: Dispatch, getState: () => State, api: AxiosInstance): void => {
+  const {offers} = getState();
+
+  api.post(`/favorite/${id}/${numberStatus}`)
+    .then((response: AxiosResponse) => {
+      if (response.status === 200) {
+        const updatedOffer =  parseOffer(response.data);
+        const updatedOfferIndex = offers?.findIndex((offer) => offer.id === updatedOffer.id);
+        const isUpdateOffers = offers && (updatedOfferIndex !== undefined);
+
+        dispatch(setSelectOffer(updatedOffer));
+
+        if (isUpdateOffers) {
+          offers.splice(updatedOfferIndex, 1, updatedOffer);
+          dispatch(fillList(offers));
+        }
+      }
+    },
+    );
+};
+
+
+export const sendCommentOffer = (id: number, comment: string, rating: number) =>(dispatch: Dispatch, _getState: () => State, api: AxiosInstance): void => {
+  dispatch(setCommentLoading(true));
   api.post(`/comments/${id}`, {comment, rating})
     .then((response:AxiosResponse) => {
-
       if(response.status === 200){
         //TODO
         // eslint-disable-next-line no-console
         console.log('комментарий отправлен');
+
+        const updatedComments = parseComments(response.data);
+
+        dispatch(setComments(updatedComments));
       }
-    });
+    })
+    .finally(()=> dispatch(setCommentLoading(false)));
 };
+
+export const setCommentLoading = (isCommentLoading: boolean) => ({
+  type: ActionType.CommentLoading,
+  isCommentLoading,
+});
 
 
 export const setHotelsFavorites = (offersFavorites: Offers): setTypeHotelsFavoritesType => ({
