@@ -1,15 +1,17 @@
-import {Dispatch, useRef} from 'react';
+import { useRef} from 'react';
 import {connect, ConnectedProps} from 'react-redux';
 import {sendAuthToServer} from '../../store/action';
 import {Link, Redirect, Route} from 'react-router-dom';
 import {State} from '../../types/state';
 import {AppRoute} from '../../const';
+import { ThunkDispatch, AnyAction } from '@reduxjs/toolkit';
+import { AxiosInstance } from 'axios';
 
 const mapStateToProps = ({authorizationStatus}: State) => ({
   authorizationStatus,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+const mapDispatchToProps = (dispatch: ThunkDispatch<State, AxiosInstance, AnyAction>) => ({
   setAuth(email: string, password: string) {
     dispatch(sendAuthToServer(email, password));
   },

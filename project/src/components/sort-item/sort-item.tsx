@@ -1,14 +1,16 @@
 import {SortItem, SortItemType} from '../../const';
-import {Dispatch, useState} from 'react';
+import { useState} from 'react';
 import { State } from '../../types/state';
 import { connect, ConnectedProps } from 'react-redux';
 import {selectStateSort} from '../../store/action';
+import { ThunkDispatch, AnyAction } from '@reduxjs/toolkit';
+import { AxiosInstance } from 'axios';
 
 const mapStateToProps = ({stateSortOffers}: State) => ({
   stateSortOffers,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+const mapDispatchToProps = (dispatch: ThunkDispatch<State, AxiosInstance, AnyAction>) => ({
   setStateSort(state: SortItemType) {
     dispatch(selectStateSort(state));
   },
@@ -45,7 +47,7 @@ function SortItemScreen(props: PropsFromRedux): JSX.Element {
 
       <ul
         className={`places__options places__options--custom ${stateSortList? 'places__options--opened': false}`}
-      > {/* todo */}
+      >
 
         {
           SortItem.map((item) => (
@@ -62,10 +64,6 @@ function SortItemScreen(props: PropsFromRedux): JSX.Element {
             </li>))
         }
 
-        {/* <li className="places__option places__option--active" tabIndex={0}>Popular</li>
-        <li className="places__option" tabIndex={0}>Price: low to high</li>
-        <li className="places__option" tabIndex={0}>Price: high to low</li>
-        <li className="places__option" tabIndex={0}>Top rated first</li> */}
       </ul>
     </form>
   );

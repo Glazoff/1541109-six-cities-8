@@ -1,4 +1,4 @@
-import { Dispatch, memo } from 'react';
+import { memo } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Link, useHistory  } from 'react-router-dom';
 import {SelectOfferForMap, setStatusFavorites } from '../../store/action';
@@ -8,19 +8,19 @@ import { State } from '../../types/state';
 
 import {OfferCardProps} from '../../types/types';
 import { AppRoute } from '../../const';
+import { ThunkDispatch, AnyAction } from '@reduxjs/toolkit';
+import { AxiosInstance } from 'axios';
 
 const mapStateToProps = ({authorizationStatus}: State) => ({
   authorizationStatus,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+const mapDispatchToProps = (dispatch: ThunkDispatch<State, AxiosInstance, AnyAction>) => ({
   selectOffer (offer: Offer) {
     dispatch(SelectOfferForMap(offer));
   },
   setStatusFavoritesOffer(id: number, numberStatus: number, isFavoritesPage: boolean) {
     dispatch(setStatusFavorites(id, numberStatus, isFavoritesPage));
-    // eslint-disable-next-line no-debugger
-    // debugger;
   },
 });
 
@@ -48,7 +48,7 @@ function OfferCardScreen(props : ConnectedComponentProps): JSX.Element {
       )}
       <div className={`place-card__image-wrapper ${isFavoritesPage? 'favorites__image-wrapper' : 'cities__image-wrapper' }`}>
         <Link to={cardPath}>
-          <img className="place-card__image" src={previewImage} width={isFavoritesPage? '150': '260'} height={isFavoritesPage? '110': '200'} alt="Place image"/>
+          <img className="place-card__image" src={previewImage} width={isFavoritesPage? '150': '260'} height={isFavoritesPage? '110': '200'} alt="Place_image"/>
         </Link>
       </div>
       <div className="place-card__info">

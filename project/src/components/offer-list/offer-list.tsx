@@ -3,7 +3,6 @@ import OfferCardScreen from '../offer-card/offer-card';
 import {OfferListProps} from '../../types/types';
 
 function OfferListScreen ({offers, isFavoritesPage, isRoomOfferPage} : OfferListProps): JSX.Element{
-
   return isRoomOfferPage? (
     <div className="near-places__list places__list">
       {

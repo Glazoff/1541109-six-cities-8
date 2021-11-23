@@ -1,4 +1,4 @@
-import {Dispatch, useEffect} from 'react';
+import {useEffect} from 'react';
 import {connect, ConnectedProps} from 'react-redux';
 
 import {FavoritesPageProps} from '../../types/types';
@@ -8,12 +8,14 @@ import OfferListScreen from '../offer-list/offer-list';
 import HeaderScreen from '../header/header';
 
 import {getHotelsFavorites} from '../../store/action';
+import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
+import { AxiosInstance } from 'axios';
 
 const mapStateToProps = ({offersFavorites}: State) => ({
   offersFavorites,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+const mapDispatchToProps = (dispatch: ThunkDispatch<State, AxiosInstance, AnyAction>) => ({
   setOffersFavorites() {
     dispatch(getHotelsFavorites());
   },
@@ -31,13 +33,8 @@ function FavoritesPageScreen (props : ConnectedComponentProps): JSX.Element {
   useEffect(() => setOffersFavorites(),[]);
 
 
-  // eslint-disable-next-line no-console
-  console.log(offersFavorites);
-
   const offers = offersFavorites?.filter((offer) => offer.isFavorite);
 
-  // eslint-disable-next-line no-debugger
-  // debugger;
 
   const citiesSet = new Set(offers?.map((offer) => offer.city.nameCity));
 

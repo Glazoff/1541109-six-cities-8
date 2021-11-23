@@ -1,4 +1,4 @@
-import {Dispatch, useEffect} from 'react';
+import {useEffect} from 'react';
 import {useHistory, useParams} from 'react-router-dom';
 
 import {connect, ConnectedProps} from 'react-redux';
@@ -17,6 +17,8 @@ import HeaderScreen from '../header/header';
 import {getComments, getHotelNearby, getHotel, SelectOfferForMap, updateRoomOffer} from '../../store/action';
 import Error404Screen from '../error-404-page/error-404-page';
 import { AppRoute } from '../../const';
+import { ThunkDispatch, AnyAction } from '@reduxjs/toolkit';
+import { AxiosInstance } from 'axios';
 
 
 const mapStateToProps = ({titleCity, offers, comments, offersNearby, selectOffer, error404, authorizationStatus}: State) => ({
@@ -29,7 +31,7 @@ const mapStateToProps = ({titleCity, offers, comments, offersNearby, selectOffer
   authorizationStatus,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+const mapDispatchToProps = (dispatch: ThunkDispatch<State, AxiosInstance, AnyAction>) => ({
   setOfferSelect(id: number) {
     dispatch(getHotel(id));
   },
@@ -66,6 +68,13 @@ function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
     setOffersNearby(Number(id));
   },[]);
 
+  useEffect(() => {
+    if (selectOffer) {
+      selectOfferMap(selectOffer);
+    }
+
+  },[selectOffer]);
+
   if(error404) {
     return(
       <Error404Screen/>
@@ -76,14 +85,10 @@ function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
     return <div></div>;
   }
 
-  selectOfferMap(selectOffer);
-
 
   const {bedrooms, images, isPremium, title, rating, type, maxAdults, price, goods, host, description, isFavorite} = selectOffer;
 
   const widthRating = `${(100 * rating)/5.0}%`;
-
-  offersNearby?.push(selectOffer);
 
 
   return offersNearby && comments ? (
@@ -205,7 +210,7 @@ function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
           </div>
           <section className="property__map map">
             <Map
-              points={offersNearby}
+              points={[...offersNearby, selectOffer]}
             />
           </section>
         </section>

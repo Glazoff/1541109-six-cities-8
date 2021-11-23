@@ -1,5 +1,6 @@
-/* eslint-disable no-console */
-import { Dispatch, useState} from 'react';
+import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
+import { AxiosInstance } from 'axios';
+import {  Fragment, useState} from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {sendCommentOffer} from '../../store/action';
 import { State } from '../../types/state';
@@ -20,7 +21,7 @@ const mapStateToProps = ({isCommentLoading}: State) => ({
   isCommentLoading,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+const mapDispatchToProps = (dispatch: ThunkDispatch<State, AxiosInstance, AnyAction>) => ({
   sendComment(id: number, comment: string, rating: number) {
     dispatch(sendCommentOffer(id, comment, rating));
   },
@@ -48,10 +49,9 @@ function CommentFormScreen(props: ConnectedComponentProps): JSX.Element {
     <form className="reviews__form form" action="#" method="post">
       <label className="reviews__label form__label" htmlFor="review">Your review</label>
       <div className="reviews__rating-form form__rating">
-        {/* map массив от 1 до 5 */}
         {
           COUNT_RATING.map((ratingNumber) => (
-            <>
+            <Fragment key={String(ratingNumber.star)}>
               <input
                 onChange={(evt) => {setRating(evt.target.value);}}
                 className="form__rating-input visually-hidden"
@@ -66,7 +66,7 @@ function CommentFormScreen(props: ConnectedComponentProps): JSX.Element {
                   <use xlinkHref="#icon-star"></use>
                 </svg>
               </label>
-            </>
+            </Fragment>
           ))
         }
       </div>
@@ -91,8 +91,6 @@ function CommentFormScreen(props: ConnectedComponentProps): JSX.Element {
             evt.preventDefault();
             sendComment(Number(id),comment, Number(rating));
             resetCommentForm();
-            console.log('rating', rating);
-            console.log('comment', comment);
           }}
           className="reviews__submit form__submit button"
           type="submit"

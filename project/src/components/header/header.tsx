@@ -2,8 +2,9 @@ import {connect, ConnectedProps} from 'react-redux';
 import {State} from '../../types/state';
 import {AppRoute} from '../../const';
 import {Link} from 'react-router-dom';
-import { Dispatch } from 'react';
 import {deleteLogout} from '../../store/action';
+import { ThunkDispatch, AnyAction } from '@reduxjs/toolkit';
+import { AxiosInstance } from 'axios';
 
 
 const mapStateToProps = ({authorizationStatus, user}: State) => ({
@@ -11,7 +12,7 @@ const mapStateToProps = ({authorizationStatus, user}: State) => ({
   user,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+const mapDispatchToProps = (dispatch: ThunkDispatch<State, AxiosInstance, AnyAction>) => ({
   signOut() {
     dispatch(deleteLogout());
   },
@@ -52,13 +53,13 @@ function HeaderScreen (props: PropsFromRedux): JSX.Element {
               </ul>:
               <ul className="header__nav-list">
                 <li className="header__nav-item user">
-                  <a className="header__nav-link header__nav-link--profile" href="#">
+                  <Link className="header__nav-link header__nav-link--profile" to={AppRoute.SignIn}>
                     <div className="header__avatar-wrapper user__avatar-wrapper">
                     </div>
-                    <Link to={AppRoute.SignIn}>
-                      <span className="header__login">Sign in</span>
-                    </Link>
-                  </a>
+
+                    <span className="header__login">Sign in</span>
+
+                  </Link>
                 </li>
               </ul>}
           </nav>

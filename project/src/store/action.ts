@@ -15,6 +15,7 @@ import {ThunkAction} from 'redux-thunk';
 import { State } from '../types/state';
 import { AxiosInstance , AxiosResponse} from 'axios';
 import { SortItemType } from '../const';
+import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
 
 
 export enum ActionType {
@@ -95,8 +96,8 @@ export type selectStateSortType = {
   type: ActionType.SelectStateSort,
   sortType: string,
 }
-//временно убрал типы чтобы пропала ошибка в index
-export const loadOffers = () => (dispatch: any, _getState: any, api: any) => {
+
+export const loadOffers = (): ThunkAction<void, State, AxiosInstance, AnyAction> => (dispatch: ThunkDispatch<State, AxiosInstance, AnyAction >, _getState: () => State, api: AxiosInstance): void => {
   api.get('/hotels')
     .then((response: responseType) => {
       const formattedData = parseOffers(response.data);
@@ -104,8 +105,7 @@ export const loadOffers = () => (dispatch: any, _getState: any, api: any) => {
     });
 };
 
-//временно убрал типы чтобы пропала ошибка в index
-export const getAuthFromServer = () => (dispatch: any, _getState: any, api: any): void => {
+export const getAuthFromServer = (): ThunkAction<void, State, AxiosInstance, AnyAction> => (dispatch: ThunkDispatch<State, AxiosInstance, AnyAction >, _getState:  () => State, api: AxiosInstance): void => {
   api.get('/login')
     .then((response: AxiosResponse) => {
       if(response.status === 200){
@@ -204,7 +204,7 @@ export const setStatusFavorites = (id: number, numberStatus: number, isFavorites
         if (isUpdateOffers) {
           offers.splice(updatedOfferIndex, 1, updatedOffer);
           if(isFavoritesPage){
-            dispatch(setHotelsFavorites(offers));
+            dispatch(setHotelsFavorites([...offers]));
           } else {
             dispatch(fillList(offers));
           }
@@ -240,9 +240,6 @@ export const sendCommentOffer = (id: number, comment: string, rating: number) =>
   api.post(`/comments/${id}`, {comment, rating})
     .then((response:AxiosResponse) => {
       if(response.status === 200){
-        //TODO
-        // eslint-disable-next-line no-console
-        console.log('комментарий отправлен');
 
         const updatedComments = parseComments(response.data);
 
@@ -252,7 +249,7 @@ export const sendCommentOffer = (id: number, comment: string, rating: number) =>
     .finally(()=> dispatch(setCommentLoading(false)));
 };
 
-export const setCommentLoading = (isCommentLoading: boolean) => ({
+export const setCommentLoading = (isCommentLoading: boolean): AnyAction => ({
   type: ActionType.CommentLoading,
   isCommentLoading,
 });
