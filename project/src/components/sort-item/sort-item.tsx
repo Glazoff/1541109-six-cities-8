@@ -24,7 +24,6 @@ function SortItemScreen(props: PropsFromRedux): JSX.Element {
   const [stateSortList, setStateSortList] = useState(false);
 
 
-  //todo useState или redux, после выбора список закрывается
   return (
     <form className="places__sorting" action="#" method="get">
       <span className="places__sorting-caption">Sort by</span>

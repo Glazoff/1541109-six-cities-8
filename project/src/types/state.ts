@@ -14,6 +14,6 @@ export type State = {
   selectOffer: Offer | null;
   error404: boolean;
   stateSortOffers: string | null;
-  sortOffers: Offer | null;
+  sortOffers: Offers | null;
   isCommentLoading: boolean;
 }

@@ -14,7 +14,8 @@ import {Dispatch} from 'react';
 
 import SortItemScreen from '../sort-item/sort-item';
 
-import {SortItemType} from '../../const';
+import {SortItemType, cityList} from '../../const';
+
 
 const setSortOffers = (offers: Offers | undefined, typeSort: string | null, originalSort: Offers | undefined) => {
   if(offers && typeSort && originalSort) {
@@ -70,36 +71,21 @@ function MainPageScreen(props: ConnectedComponentProps): JSX.Element {
           <div className="tabs">
             <section className="locations container">
               <ul className="locations__list tabs__list">
-                <li className="locations__item">
-                  <a className="locations__item-link tabs__item" href="#">
-                    <span>Paris</span>
-                  </a>
-                </li>
-                <li className="locations__item">
-                  <a className="locations__item-link tabs__item" href="#">
-                    <span>Cologne</span>
-                  </a>
-                </li>
-                <li className="locations__item">
-                  <a className="locations__item-link tabs__item" href="#">
-                    <span>Brussels</span>
-                  </a>
-                </li>
-                <li className="locations__item">
-                  <a className="locations__item-link tabs__item">
-                    <span>Amsterdam</span>
-                  </a>
-                </li>
-                <li className="locations__item">
-                  <a className="locations__item-link tabs__item" href="#">
-                    <span>Hamburg</span>
-                  </a>
-                </li>
-                <li className="locations__item">
-                  <a className="locations__item-link tabs__item tabs__item--active" href="#">
-                    <span>Dusseldorf</span>
-                  </a>
-                </li>
+                {
+                  cityList.map((city) => (
+                    <li
+                      key={city.cityName}
+                      className="locations__item"
+                    >
+                      <a
+                        className={`locations__item-link tabs__item ${city.cityName === titleCity? 'tabs__item--active': false}`}
+                        onClick={() => onChangeCity(city.cityName)}
+                        href="#"
+                      >
+                        <span>{city.cityName}</span>
+                      </a>
+                    </li>))
+                }
               </ul>
             </section>
           </div>
@@ -120,60 +106,23 @@ function MainPageScreen(props: ConnectedComponentProps): JSX.Element {
           <div className="tabs">
             <section className="locations container">
               <ul className="locations__list tabs__list">
-                <li className="locations__item">
-                  <a
-                    className="locations__item-link tabs__item"
-                    onClick={() => onChangeCity('Paris')}
-                    href="#"
-                  >
-                    <span>Paris</span>
-                  </a>
-                </li>
-                <li className="locations__item">
-                  <a
-                    className="locations__item-link tabs__item"
-                    onClick={() => onChangeCity('Cologne')}
-                    href="#"
-                  >
-                    <span>Cologne</span>
-                  </a>
-                </li>
-                <li className="locations__item">
-                  <a
-                    className="locations__item-link tabs__item"
-                    onClick={() => onChangeCity('Brussels')}
-                    href="#"
-                  >
-                    <span>Brussels</span>
-                  </a>
-                </li>
-                <li className="locations__item">
-                  <a
-                    className="locations__item-link tabs__item tabs__item--active"
-                    onClick={() => onChangeCity('Amsterdam')}
-                    href="#"
-                  >
-                    <span>Amsterdam</span>
-                  </a>
-                </li>
-                <li className="locations__item">
-                  <a
-                    className="locations__item-link tabs__item"
-                    onClick={() => onChangeCity('Hamburg')}
-                    href="#"
-                  >
-                    <span>Hamburg</span>
-                  </a>
-                </li>
-                <li className="locations__item">
-                  <a
-                    className="locations__item-link tabs__item"
-                    onClick={() => onChangeCity('Dusseldorf')}
-                    href="#"
-                  >
-                    <span>Dusseldorf</span>
-                  </a>
-                </li>
+
+                {
+                  cityList.map((city) => (
+                    <li
+                      key={city.cityName}
+                      className="locations__item"
+                    >
+                      <a
+                        className={`locations__item-link tabs__item ${city.cityName === titleCity? 'tabs__item--active': false}`}
+                        onClick={() => onChangeCity(city.cityName)}
+                        href="#"
+                      >
+                        <span>{city.cityName}</span>
+                      </a>
+                    </li>))
+                }
+
               </ul>
             </section>
           </div>
