@@ -2,6 +2,7 @@
 import {Offer, Offers, OffersForAdapterTypes} from '../types/offers';
 import {userType} from '../types/user';
 import {commentsType} from '../types/comment';
+import {toast} from 'react-toastify';
 
 import {parseOffers} from '../adapters/parse-offers';
 import {parseAuthInfo} from '../adapters/parse-authInfo';
@@ -244,6 +245,11 @@ export const sendCommentOffer = (id: number, comment: string, rating: number) =>
         const updatedComments = parseComments(response.data);
 
         dispatch(setComments(updatedComments));
+      }
+    })
+    .catch((error: AxiosResponse) => {
+      if(error) {
+        toast.error('комментарий не отправлен');
       }
     })
     .finally(()=> dispatch(setCommentLoading(false)));

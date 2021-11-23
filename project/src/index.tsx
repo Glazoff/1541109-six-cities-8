@@ -17,6 +17,9 @@ import { ThunkDispatch } from '@reduxjs/toolkit';
 import { State } from './types/state';
 import { AxiosInstance } from 'axios';
 
+import {ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const onUnauthorized = () => {
   store.dispatch(setAuth(false));
 };
@@ -32,6 +35,7 @@ export const store = createStore(reducer, composeWithDevTools(applyMiddleware(th
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store} >
+      <ToastContainer/>
       <App/>
     </Provider>
 
