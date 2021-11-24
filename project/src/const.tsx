@@ -5,12 +5,6 @@ export enum AppRoute {
   Room = '/offer/:id',
 }
 
-export enum AuthorizationStatus {
-  Auth = 'AUTH',
-  NoAuth = 'NO_AUTH',
-  Unknown = 'UNKNOWN',
-}
-
 export enum SortItemType {
   Popular = 'Popular',
   PriceLowToHigh = 'Price: low to high',
@@ -18,7 +12,7 @@ export enum SortItemType {
   TopRatedFirst = 'Top rated first',
 }
 
-export const SortItem = [
+export const SortItems = [
   {
     value: SortItemType.Popular,
   },
@@ -33,7 +27,7 @@ export const SortItem = [
   },
 ];
 
-export enum cityListType {
+export enum CityListType {
   Paris = 'Paris',
   Cologne = 'Cologne',
   Brussels = 'Brussels',
@@ -42,25 +36,33 @@ export enum cityListType {
   Dusseldorf = 'Dusseldorf',
 }
 
-export const cityList = [
+export const CityList = [
   {
-    cityName: cityListType.Paris,
+    cityName: CityListType.Paris,
   },
   {
-    cityName: cityListType.Cologne,
+    cityName: CityListType.Cologne,
   },
   {
-    cityName: cityListType.Brussels,
+    cityName: CityListType.Brussels,
   },
   {
-    cityName: cityListType.Amsterdam,
+    cityName: CityListType.Amsterdam,
   },
   {
-    cityName: cityListType.Hamburg,
+    cityName: CityListType.Hamburg,
   },
   {
-    cityName: cityListType.Dusseldorf,
+    cityName: CityListType.Dusseldorf,
   },
+];
+
+export const COUNTS_RATING = [
+  {star: 5},
+  {star: 4},
+  {star: 3},
+  {star: 2},
+  {star: 1},
 ];
 
 

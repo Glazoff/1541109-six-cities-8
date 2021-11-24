@@ -5,7 +5,6 @@ import {connect, ConnectedProps} from 'react-redux';
 
 import {State} from '../../types/state';
 import {Offer} from '../../types/offers';
-import {RoomOfferProps} from '../../types/types';
 
 import CommentFormScreen from '../comment-form/comment-form';
 import ReviewsListScreen from '../reviews-list/reviews-list';
@@ -52,9 +51,8 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<State, AxiosInstance, AnyAct
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
-type ConnectedComponentProps = PropsFromRedux & RoomOfferProps;
 
-function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
+function RoomOfferScreen(props: PropsFromRedux): JSX.Element {
   const {setComments, comments, setOffersNearby, offersNearby, setOfferSelect, selectOffer, error404, selectOfferMap, authorizationStatus, setStatusFavoritesOffer} = props;
 
   const {id} = useParams<{id: string}>();

@@ -32,7 +32,6 @@ export enum ActionType {
   SetHotelsFavorites ='server/setHotelsServer',
   SelectOfferForMap = 'map/selectOffer',
   SelectStateSort = 'main/selectStateSort',
-  SetHotelFavorites = 'main/setHotelFavorites',
   CommentLoading = 'server/setCommentLoading',
 }
 
