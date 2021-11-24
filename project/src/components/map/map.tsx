@@ -7,26 +7,25 @@ import useMap from '../../hooks/useMap';
 import {Icon, Marker} from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-import {MARKER_DEFAULT, MARKER_CURRENT} from '../../const';
+import {MARKERS_MAP} from '../../const';
 import { connect, ConnectedProps } from 'react-redux';
 import { State } from '../../types/state';
 
 
 const defaultCustomIcon = new Icon({
-  iconUrl: MARKER_DEFAULT,
+  iconUrl: MARKERS_MAP.MarkerDefault,
   iconSize: [40, 50],
   iconAnchor: [20, 40],
 });
 
 const currentCustomIcon = new Icon({
-  iconUrl: MARKER_CURRENT,
+  iconUrl: MARKERS_MAP.MarkerCurrent,
   iconSize: [40, 50],
   iconAnchor: [20, 40],
 });
 
-const mapStateToProps = ({activeOfferForMap, offers}: State) => ({
+const mapStateToProps = ({activeOfferForMap}: State) => ({
   activeOfferForMap,
-  offers,
 });
 
 const connector = connect(mapStateToProps);
@@ -40,7 +39,8 @@ function Map(props : ConnectedComponentProps): JSX.Element {
 
   const city = points[0].city;
 
-
+  // eslint-disable-next-line no-debugger
+  // debugger;
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
 
@@ -61,8 +61,11 @@ function Map(props : ConnectedComponentProps): JSX.Element {
           .addTo(map);
       });
     }
-  }, [map, points, activeOfferForMap]);
+  }, [map, points, activeOfferForMap, city]);
 
+  useEffect(() => {
+    map?.setView([city.location.latitudeCity, city.location.longitudeCity],city.location.zoomCity);
+  }, [city]);
 
   return (
     <div

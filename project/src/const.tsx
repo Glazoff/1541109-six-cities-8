@@ -65,7 +65,8 @@ export const COUNTS_RATING = [
   {star: 1},
 ];
 
+export enum MARKERS_MAP {
+  MarkerDefault = '/img/pin.svg',
+  MarkerCurrent = 'img/pin-active.svg'
+}
 
-export const MARKER_DEFAULT = '/img/pin.svg';
-
-export const MARKER_CURRENT = '/img/pin-active.svg';

@@ -28,7 +28,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 function FavoritesPageScreen (props : PropsFromRedux): JSX.Element {
   const {setOffersFavorites, offersFavorites} = props;
 
-  useEffect(() => setOffersFavorites(),[]);
+  useEffect(() => setOffersFavorites(), []);
 
 
   const offers = offersFavorites?.filter((offer) => offer.isFavorite);
