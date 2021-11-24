@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import {Offer, Offers, OffersForAdapterTypes} from '../types/offers';
 import {userType} from '../types/user';
 import {commentsType} from '../types/comment';
@@ -51,7 +50,7 @@ export type fillListType = {
 
 export type SelectOfferForMapType = {
   type: ActionType.SelectOfferForMap,
-  activeOfferForMap: Offer,
+  activeOfferForMap: Offer | null,
 }
 
 export type getAuthType = {
@@ -114,9 +113,12 @@ export const getAuthFromServer = (): ThunkAction<void, State, AxiosInstance, Any
         saveToken(formattedData.token);
         dispatch(setUser(formattedData));
         dispatch(setAuth(true));
-      } else {
+      }})
+    .catch((error) => {
+      if(error) {
         dispatch(setAuth(false));
-      }});
+      }
+    });
 };
 
 export const sendAuthToServer = (email: string, password: string) => (dispatch: Dispatch, _getState: () => State, api: AxiosInstance): void => {
@@ -309,7 +311,7 @@ export const fillList = (offers: Offers): fillListType => ({
   offers,
 });
 
-export const SelectOfferForMap = (offer: Offer): SelectOfferForMapType => ({
+export const SelectOfferForMap = (offer: Offer | null): SelectOfferForMapType => ({
   type: ActionType.SelectOfferForMap,
   activeOfferForMap: offer,
 });

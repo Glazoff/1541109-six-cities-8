@@ -16,7 +16,7 @@ const mapStateToProps = ({authorizationStatus}: State) => ({
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<State, AxiosInstance, AnyAction>) => ({
-  selectOffer (offer: Offer) {
+  selectOffer (offer: Offer | null) {
     dispatch(SelectOfferForMap(offer));
   },
   setStatusFavoritesOffer(id: number, numberStatus: number, isFavoritesPage: boolean) {
@@ -35,12 +35,14 @@ function OfferCardScreen(props : ConnectedComponentProps): JSX.Element {
   const history = useHistory();
   const {previewImage, isPremium, price, title, type, isFavorite, rating} = offer;
 
-  const widthRating = `${(100 * rating)/5.0}%`;
-
   const cardPath = `/offer/${offer.id}`;
 
   return (
-    <article  onMouseEnter={() => isRoomOfferPage?null:selectOffer(offer)} className={`place-card ${isFavoritesPage? 'favorites__card' :'cities__place-card'}`}>
+    <article
+      onMouseOver={() => isRoomOfferPage?null:selectOffer(offer)}
+      onMouseOut={() => isRoomOfferPage?null:selectOffer(null)}
+      className={`place-card ${isFavoritesPage? 'favorites__card' :'cities__place-card'}`}
+    >
       {isPremium &&(
         <div className="place-card__mark">
           <span>Premium</span>
@@ -87,7 +89,7 @@ function OfferCardScreen(props : ConnectedComponentProps): JSX.Element {
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{width: widthRating}}></span>
+            <span style={{width: Math.round(rating) * 15}}></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>

@@ -88,9 +88,6 @@ function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
 
   const {bedrooms, images, isPremium, title, rating, type, maxAdults, price, goods, host, description, isFavorite} = selectOffer;
 
-  const widthRating = `${(100 * rating)/5.0}%`;
-
-
   return offersNearby && comments ? (
     <div className="page">
       <HeaderScreen/>
@@ -99,7 +96,7 @@ function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
         <section className="property">
           <div className="property__gallery-container container">
             <div className="property__gallery">
-              { images.map((image?:  string) => (
+              {images.slice(0, 6).map((image?:  string) => (
                 <div className="property__image-wrapper" key={`${id+image}`}>
                   <img className="property__image" src={image} alt="" />
                 </div>
@@ -147,7 +144,7 @@ function RoomOfferScreen(props: ConnectedComponentProps): JSX.Element {
               </div>
               <div className="property__rating rating">
                 <div className="property__stars rating__stars">
-                  <span style={{width: widthRating}}></span>
+                  <span style={{width: Math.round(rating) * 30}}></span>
                   <span className="visually-hidden">Rating</span>
                 </div>
                 <span className="property__rating-value rating__value">{rating}</span>
