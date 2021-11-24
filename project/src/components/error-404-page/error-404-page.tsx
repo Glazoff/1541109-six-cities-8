@@ -1,10 +1,12 @@
 import {Fragment } from 'react';
+import { Link } from 'react-router-dom';
+import { AppRoute } from '../../const';
 
 function Error404Screen(): JSX.Element {
   return(
     <Fragment>
       <h1>404 Not Found</h1>
-      <a href="#">На главную</a>
+      <Link to={AppRoute.Main}>На главную</Link>
     </Fragment>
   );
 }

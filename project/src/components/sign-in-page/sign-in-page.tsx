@@ -1,15 +1,17 @@
-import {Dispatch, useState} from 'react';
-import { connect, ConnectedProps } from 'react-redux';
+import { useRef} from 'react';
+import {connect, ConnectedProps} from 'react-redux';
 import {sendAuthToServer} from '../../store/action';
-import { Redirect, Route } from 'react-router-dom';
-import { State } from '../../types/state';
-import { AppRoute } from '../../const';
+import {Link, Redirect, Route} from 'react-router-dom';
+import {State} from '../../types/state';
+import {AppRoute} from '../../const';
+import { ThunkDispatch, AnyAction } from '@reduxjs/toolkit';
+import { AxiosInstance } from 'axios';
 
 const mapStateToProps = ({authorizationStatus}: State) => ({
   authorizationStatus,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+const mapDispatchToProps = (dispatch: ThunkDispatch<State, AxiosInstance, AnyAction>) => ({
   setAuth(email: string, password: string) {
     dispatch(sendAuthToServer(email, password));
   },
@@ -23,8 +25,15 @@ type ConnectedComponentProps = PropsFromRedux ;
 function SignInScreen(props: ConnectedComponentProps): JSX.Element {
   const {setAuth, authorizationStatus} = props;
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const emailInput = useRef<HTMLInputElement | HTMLButtonElement | null>(null);
+  const passwordInput = useRef<HTMLInputElement | HTMLButtonElement  | null>(null);
+
+  function sendAuth (email: any, password: any) {
+    if (email.current.value && password.current.value){
+
+      setAuth(email.current.value, password.current.value);
+    }
+  }
 
 
   return authorizationStatus ?
@@ -37,9 +46,9 @@ function SignInScreen(props: ConnectedComponentProps): JSX.Element {
         <div className="container">
           <div className="header__wrapper">
             <div className="header__left">
-              <a className="header__logo-link" href="main.html">
+              <Link className="header__logo-link" to={AppRoute.Main}>
                 <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41"/>
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -58,7 +67,7 @@ function SignInScreen(props: ConnectedComponentProps): JSX.Element {
                   name="email"
                   placeholder="Email"
                   required
-                  onChange={(evt) => setEmail(evt.target.value)}
+                  ref={(instance) => emailInput.current = instance}
                 />
               </div>
               <div className="login__input-wrapper form__input-wrapper">
@@ -69,7 +78,7 @@ function SignInScreen(props: ConnectedComponentProps): JSX.Element {
                   name="password"
                   placeholder="Password"
                   required
-                  onChange={(evt) => setPassword(evt.target.value)}
+                  ref={(instance) => passwordInput.current = instance}
                 />
               </div>
               <button
@@ -77,7 +86,7 @@ function SignInScreen(props: ConnectedComponentProps): JSX.Element {
                 type="submit"
                 onClick={(evt) => {
                   evt.preventDefault();
-                  setAuth(email, password);
+                  sendAuth(emailInput, passwordInput);
                 }}
               >
                   Sign in

@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import {createStore, applyMiddleware} from 'redux';
+import {createStore, applyMiddleware, AnyAction} from 'redux';
 import thunk from 'redux-thunk';
 import {Provider} from 'react-redux';
 import {composeWithDevTools} from 'redux-devtools-extension';
@@ -13,30 +13,30 @@ import App from './components/app/app';
 import {reducer} from './store/reducer';
 
 import {loadOffers, getAuthFromServer, setAuth} from './store/action';
+import { ThunkDispatch } from '@reduxjs/toolkit';
+import { State } from './types/state';
+import { AxiosInstance } from 'axios';
 
-
-const Setting = {
-  OFFER_COUNT: 212,
-};
+import {ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const onUnauthorized = () => {
   store.dispatch(setAuth(false));
-}; // функция отрабатывает случай неавторизованного пользователя
+};
 
 export const API = createAPI(onUnauthorized);
 
 export const store = createStore(reducer, composeWithDevTools(applyMiddleware(thunk.withExtraArgument(API))));
 
-store.dispatch(loadOffers());
 
-store.dispatch(getAuthFromServer());
+(store.dispatch as ThunkDispatch<State, AxiosInstance, AnyAction>)(loadOffers());
+(store.dispatch as ThunkDispatch<State, AxiosInstance, AnyAction>)(getAuthFromServer());
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store} >
-      <App
-        offerCount = {Setting.OFFER_COUNT}
-      />
+      <ToastContainer/>
+      <App/>
     </Provider>
 
   </React.StrictMode>,
