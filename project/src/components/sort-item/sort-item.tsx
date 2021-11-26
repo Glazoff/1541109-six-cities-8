@@ -1,4 +1,4 @@
-import {SortItem, SortItemType} from '../../const';
+import {SortItems, SortItemType} from '../../const';
 import { useState} from 'react';
 import { State } from '../../types/state';
 import { connect, ConnectedProps } from 'react-redux';
@@ -50,7 +50,7 @@ function SortItemScreen(props: PropsFromRedux): JSX.Element {
       >
 
         {
-          SortItem.map((item) => (
+          SortItems.map((item) => (
             <li
               key={item.value}
               className="places__option "

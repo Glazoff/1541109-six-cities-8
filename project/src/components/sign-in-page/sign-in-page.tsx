@@ -25,11 +25,11 @@ type ConnectedComponentProps = PropsFromRedux ;
 function SignInScreen(props: ConnectedComponentProps): JSX.Element {
   const {setAuth, authorizationStatus} = props;
 
-  const emailInput = useRef<HTMLInputElement | HTMLButtonElement | null>(null);
-  const passwordInput = useRef<HTMLInputElement | HTMLButtonElement  | null>(null);
+  const emailInput = useRef<HTMLInputElement | null >(null);
+  const passwordInput = useRef<HTMLInputElement | null >(null);
 
-  function sendAuth (email: any, password: any) {
-    if (email.current.value && password.current.value){
+  function sendAuth (email: React.MutableRefObject<HTMLInputElement | null>, password: React.MutableRefObject<HTMLInputElement | null>) {
+    if (email?.current?.value  && password?.current?.value){
 
       setAuth(email.current.value, password.current.value);
     }

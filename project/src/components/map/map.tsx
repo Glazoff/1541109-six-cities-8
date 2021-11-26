@@ -1,4 +1,4 @@
-import {useRef, useEffect} from 'react';
+import {useRef, useEffect, useState} from 'react';
 
 import {MapProps} from '../../types/types';
 
@@ -7,26 +7,25 @@ import useMap from '../../hooks/useMap';
 import {Icon, Marker} from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-import {MARKER_DEFAULT, MARKER_CURRENT} from '../../const';
+import {MARKERS_MAP} from '../../const';
 import { connect, ConnectedProps } from 'react-redux';
 import { State } from '../../types/state';
 
 
 const defaultCustomIcon = new Icon({
-  iconUrl: MARKER_DEFAULT,
+  iconUrl: MARKERS_MAP.MarkerDefault,
   iconSize: [40, 50],
   iconAnchor: [20, 40],
 });
 
 const currentCustomIcon = new Icon({
-  iconUrl: MARKER_CURRENT,
+  iconUrl: MARKERS_MAP.MarkerCurrent,
   iconSize: [40, 50],
   iconAnchor: [20, 40],
 });
 
-const mapStateToProps = ({activeOfferForMap, offers}: State) => ({
+const mapStateToProps = ({activeOfferForMap}: State) => ({
   activeOfferForMap,
-  offers,
 });
 
 const connector = connect(mapStateToProps);
@@ -40,12 +39,20 @@ function Map(props : ConnectedComponentProps): JSX.Element {
 
   const city = points[0].city;
 
-
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
 
+  const [markers, setMarkers] = useState<Array<Marker>>([]);
+
   useEffect(() => {
     if (map) {
+
+      markers.forEach((marker) => {
+        marker.remove();
+      });
+
+      const newMarkers: Array<Marker> = [];
+
       points.forEach((point) => {
         const marker = new Marker({
           lat: point.location.latitude,
@@ -59,10 +66,16 @@ function Map(props : ConnectedComponentProps): JSX.Element {
               : defaultCustomIcon,
           )
           .addTo(map);
+        newMarkers.push(marker);
       });
-    }
-  }, [map, points, activeOfferForMap]);
 
+      setMarkers(newMarkers);
+    }
+  }, [points, activeOfferForMap]);
+
+  useEffect(() => {
+    map?.setView([city.location.latitudeCity, city.location.longitudeCity],city.location.zoomCity);
+  },[city]);
 
   return (
     <div

@@ -5,16 +5,17 @@ import LoaderScreen from '../loader/loader';
 import Map from '../map/map';
 import HeaderScreen from '../header/header';
 
-import {MainPageProps} from '../../types/types';
 import {State} from '../../types/state';
 
-import {selectCityType, fillListType, fillList, selectCity} from '../../store/action';
+import { fillList, selectCity, loadOffers} from '../../store/action';
 import {Offers} from '../../types/offers';
-import {Dispatch} from 'react';
 
 import SortItemScreen from '../sort-item/sort-item';
 
-import {SortItemType, cityList} from '../../const';
+import {SortItemType, CityList} from '../../const';
+import { ThunkDispatch, AnyAction } from '@reduxjs/toolkit';
+import { AxiosInstance } from 'axios';
+import { useEffect } from 'react';
 
 
 const setSortOffers = (offers: Offers | undefined, typeSort: string | null, originalSort: Offers | undefined) => {
@@ -43,22 +44,26 @@ const mapStateToProps = ({titleCity, offers, stateSortOffers, sortOffers}: State
     offers?.filter((offer) => offer.city.nameCity === titleCity)),
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<selectCityType | fillListType>) => ({
+const mapDispatchToProps = (dispatch: ThunkDispatch<State, AxiosInstance, AnyAction>) => ({
   onChangeCity(titleCity: string ) {
     dispatch(selectCity(titleCity));
   },
   onLoad(offers: Offers) {
     dispatch(fillList(offers));
   },
+  setOffers() {
+    dispatch(loadOffers());
+  },
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
-type ConnectedComponentProps = PropsFromRedux & MainPageProps;
 
-function MainPageScreen(props: ConnectedComponentProps): JSX.Element {
-  const {onChangeCity, titleCity, sortOffers} = props;
+function MainPageScreen(props: PropsFromRedux): JSX.Element {
+  const {onChangeCity, titleCity, sortOffers, setOffers} = props;
+
+  useEffect(() => setOffers(),[]);
 
 
   return sortOffers ? (
@@ -72,7 +77,7 @@ function MainPageScreen(props: ConnectedComponentProps): JSX.Element {
             <section className="locations container">
               <ul className="locations__list tabs__list">
                 {
-                  cityList.map((city) => (
+                  CityList.map((city) => (
                     <li
                       key={city.cityName}
                       className="locations__item"
@@ -108,7 +113,7 @@ function MainPageScreen(props: ConnectedComponentProps): JSX.Element {
               <ul className="locations__list tabs__list">
 
                 {
-                  cityList.map((city) => (
+                  CityList.map((city) => (
                     <li
                       key={city.cityName}
                       className="locations__item"

@@ -1,7 +1,6 @@
 import {useEffect} from 'react';
 import {connect, ConnectedProps} from 'react-redux';
 
-import {FavoritesPageProps} from '../../types/types';
 import {State} from '../../types/state';
 
 import OfferListScreen from '../offer-list/offer-list';
@@ -24,13 +23,12 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<State, AxiosInstance, AnyAct
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
-type ConnectedComponentProps = PropsFromRedux & FavoritesPageProps;
 
 
-function FavoritesPageScreen (props : ConnectedComponentProps): JSX.Element {
+function FavoritesPageScreen (props : PropsFromRedux): JSX.Element {
   const {setOffersFavorites, offersFavorites} = props;
 
-  useEffect(() => setOffersFavorites(),[]);
+  useEffect(() => setOffersFavorites(), []);
 
 
   const offers = offersFavorites?.filter((offer) => offer.isFavorite);

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import {Offer, Offers, OffersForAdapterTypes} from '../types/offers';
 import {userType} from '../types/user';
 import {commentsType} from '../types/comment';
@@ -17,7 +16,7 @@ import { State } from '../types/state';
 import { AxiosInstance , AxiosResponse} from 'axios';
 import { SortItemType } from '../const';
 import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
-
+import { HttpCode, ERROR_COMMENTS } from '../const';
 
 export enum ActionType {
   ChangeCity = 'main/changeCity',
@@ -33,7 +32,6 @@ export enum ActionType {
   SetHotelsFavorites ='server/setHotelsServer',
   SelectOfferForMap = 'map/selectOffer',
   SelectStateSort = 'main/selectStateSort',
-  SetHotelFavorites = 'main/setHotelFavorites',
   CommentLoading = 'server/setCommentLoading',
 }
 
@@ -51,7 +49,7 @@ export type fillListType = {
 
 export type SelectOfferForMapType = {
   type: ActionType.SelectOfferForMap,
-  activeOfferForMap: Offer,
+  activeOfferForMap: Offer | null,
 }
 
 export type getAuthType = {
@@ -109,20 +107,23 @@ export const loadOffers = (): ThunkAction<void, State, AxiosInstance, AnyAction>
 export const getAuthFromServer = (): ThunkAction<void, State, AxiosInstance, AnyAction> => (dispatch: ThunkDispatch<State, AxiosInstance, AnyAction >, _getState:  () => State, api: AxiosInstance): void => {
   api.get('/login')
     .then((response: AxiosResponse) => {
-      if(response.status === 200){
+      if(response.status === HttpCode.OK){
         const formattedData = parseAuthInfo(response.data);
         saveToken(formattedData.token);
         dispatch(setUser(formattedData));
         dispatch(setAuth(true));
-      } else {
+      }})
+    .catch((error) => {
+      if(error) {
         dispatch(setAuth(false));
-      }});
+      }
+    });
 };
 
 export const sendAuthToServer = (email: string, password: string) => (dispatch: Dispatch, _getState: () => State, api: AxiosInstance): void => {
   api.post('/login',{email, password})
     .then((response: AxiosResponse) => {
-      if(response.status === 200) {
+      if(response.status === HttpCode.OK) {
         const formattedData = parseAuthInfo(response.data);
 
         saveToken(formattedData.token);
@@ -136,7 +137,7 @@ export const sendAuthToServer = (email: string, password: string) => (dispatch: 
 export const getComments = (id: number) => (dispatch: Dispatch, _getState: () => State, api: AxiosInstance): void => {
   api.get(`/comments/${id}`)
     .then((response: AxiosResponse) => {
-      if(response.status === 200) {
+      if(response.status === HttpCode.OK) {
         const formattedData = response.data;
 
         dispatch(setComments(parseComments(formattedData)));
@@ -147,7 +148,7 @@ export const getComments = (id: number) => (dispatch: Dispatch, _getState: () =>
 export const getHotelNearby = (id: number) => (dispatch: Dispatch, _getState: () => State, api: AxiosInstance): void => {
   api.get(`/hotels/${id}/nearby`)
     .then((response: AxiosResponse) => {
-      if(response.status === 200) {
+      if(response.status === HttpCode.OK) {
         const formattedData = parseOffers(response.data);
 
         dispatch(setHotelNearby(formattedData));
@@ -158,7 +159,7 @@ export const getHotelNearby = (id: number) => (dispatch: Dispatch, _getState: ()
 export const getHotel = (id: number) => (dispatch: Dispatch, _getState: () => State, api: AxiosInstance): void => {
   api.get(`/hotels/${id}`)
     .then((response: AxiosResponse) => {
-      if(response.status === 200) {
+      if(response.status === HttpCode.OK) {
         const formatDate = parseOffer(response.data);
 
         dispatch(setError404(false));
@@ -174,7 +175,7 @@ export const getHotel = (id: number) => (dispatch: Dispatch, _getState: () => St
 export const deleteLogout = () => (dispatch: Dispatch, _getState: () => State, api: AxiosInstance): void => {
   api.delete('/logout')
     .then((response: AxiosResponse) => {
-      if(response.status === 204) {
+      if(response.status === HttpCode.LoggedOut) {
         dispatch(setAuth(false));
       }
     });
@@ -183,7 +184,7 @@ export const deleteLogout = () => (dispatch: Dispatch, _getState: () => State, a
 export const getHotelsFavorites = () => (dispatch: Dispatch, _getState: () => State, api: AxiosInstance): void => {
   api.get('/favorite')
     .then((response: AxiosResponse) => {
-      if(response.status === 200) {
+      if(response.status === HttpCode.OK) {
         const formatDate = parseOffers(response.data);
 
         dispatch(setHotelsFavorites(formatDate));
@@ -197,7 +198,7 @@ export const setStatusFavorites = (id: number, numberStatus: number, isFavorites
 
   api.post(`/favorite/${id}/${numberStatus}`)
     .then((response: AxiosResponse) => {
-      if (response.status === 200) {
+      if (response.status === HttpCode.OK) {
         const updatedOffer =  parseOffer(response.data);
         const updatedOfferIndex = offers?.findIndex((offer) => offer.id === updatedOffer.id);
         const isUpdateOffers = offers && (updatedOfferIndex !== undefined);
@@ -219,7 +220,7 @@ export const updateRoomOffer = (id: number, numberStatus: number):ThunkAction<vo
 
   api.post(`/favorite/${id}/${numberStatus}`)
     .then((response: AxiosResponse) => {
-      if (response.status === 200) {
+      if (response.status === HttpCode.OK) {
         const updatedOffer =  parseOffer(response.data);
         const updatedOfferIndex = offers?.findIndex((offer) => offer.id === updatedOffer.id);
         const isUpdateOffers = offers && (updatedOfferIndex !== undefined);
@@ -240,7 +241,7 @@ export const sendCommentOffer = (id: number, comment: string, rating: number) =>
   dispatch(setCommentLoading(true));
   api.post(`/comments/${id}`, {comment, rating})
     .then((response:AxiosResponse) => {
-      if(response.status === 200){
+      if(response.status === HttpCode.OK){
 
         const updatedComments = parseComments(response.data);
 
@@ -249,7 +250,7 @@ export const sendCommentOffer = (id: number, comment: string, rating: number) =>
     })
     .catch((error: AxiosResponse) => {
       if(error) {
-        toast.error('комментарий не отправлен');
+        toast.error(ERROR_COMMENTS);
       }
     })
     .finally(()=> dispatch(setCommentLoading(false)));
@@ -309,7 +310,7 @@ export const fillList = (offers: Offers): fillListType => ({
   offers,
 });
 
-export const SelectOfferForMap = (offer: Offer): SelectOfferForMapType => ({
+export const SelectOfferForMap = (offer: Offer | null): SelectOfferForMapType => ({
   type: ActionType.SelectOfferForMap,
   activeOfferForMap: offer,
 });

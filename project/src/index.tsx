@@ -12,7 +12,7 @@ import App from './components/app/app';
 
 import {reducer} from './store/reducer';
 
-import {loadOffers, getAuthFromServer, setAuth} from './store/action';
+import {getAuthFromServer, setAuth} from './store/action';
 import { ThunkDispatch } from '@reduxjs/toolkit';
 import { State } from './types/state';
 import { AxiosInstance } from 'axios';
@@ -29,7 +29,6 @@ export const API = createAPI(onUnauthorized);
 export const store = createStore(reducer, composeWithDevTools(applyMiddleware(thunk.withExtraArgument(API))));
 
 
-(store.dispatch as ThunkDispatch<State, AxiosInstance, AnyAction>)(loadOffers());
 (store.dispatch as ThunkDispatch<State, AxiosInstance, AnyAction>)(getAuthFromServer());
 
 ReactDOM.render(

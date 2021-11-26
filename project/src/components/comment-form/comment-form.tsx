@@ -4,14 +4,7 @@ import {  Fragment, useState} from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {sendCommentOffer} from '../../store/action';
 import { State } from '../../types/state';
-
-const COUNT_RATING = [
-  {star: 5},
-  {star: 4},
-  {star: 3},
-  {star: 2},
-  {star: 1},
-];
+import {COUNTS_RATING, RestrictionForInput} from '../../const';
 
 type CommentFormProps = {
   id: string,
@@ -50,7 +43,7 @@ function CommentFormScreen(props: ConnectedComponentProps): JSX.Element {
       <label className="reviews__label form__label" htmlFor="review">Your review</label>
       <div className="reviews__rating-form form__rating">
         {
-          COUNT_RATING.map((ratingNumber) => (
+          COUNTS_RATING.map((ratingNumber) => (
             <Fragment key={String(ratingNumber.star)}>
               <input
                 onChange={(evt) => {setRating(evt.target.value);}}
@@ -94,8 +87,7 @@ function CommentFormScreen(props: ConnectedComponentProps): JSX.Element {
           }}
           className="reviews__submit form__submit button"
           type="submit"
-          // {/*TODO* не забыть добавить сюда статус отправки/}
-          disabled={comment.length < 50 || comment.length > 300 || rating === '' || isCommentLoading}
+          disabled={comment.length < RestrictionForInput.MiniInit || comment.length > RestrictionForInput.MaxInit || rating === RestrictionForInput.EmptyStart || isCommentLoading}
         >
           Submit
         </button>

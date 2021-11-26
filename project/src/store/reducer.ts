@@ -18,7 +18,6 @@ export const initialState: State = {
   offersNearby: null,
   selectOffer: null,
   error404: false,
-  //todo enum для состояния фильтрации
   stateSortOffers: SortItemType.Popular,
   sortOffers: null,
   isCommentLoading: false,

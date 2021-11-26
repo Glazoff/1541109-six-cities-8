@@ -46,7 +46,7 @@ function HeaderScreen (props: PropsFromRedux): JSX.Element {
                   </Link>
                 </li>
                 <li className="header__nav-item">
-                  <Link to={'/'} className="header__nav-link" onClick={signOut}> {/* TODO */}
+                  <Link to={'/'} className="header__nav-link" onClick={signOut}>
                     <span className="header__signout">Sign out</span>
                   </Link>
                 </li>
