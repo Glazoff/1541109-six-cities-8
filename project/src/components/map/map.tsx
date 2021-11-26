@@ -1,4 +1,4 @@
-import {useRef, useEffect} from 'react';
+import {useRef, useEffect, useState} from 'react';
 
 import {MapProps} from '../../types/types';
 
@@ -39,13 +39,20 @@ function Map(props : ConnectedComponentProps): JSX.Element {
 
   const city = points[0].city;
 
-  // eslint-disable-next-line no-debugger
-  // debugger;
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
 
+  const [markers, setMarkers] = useState<Array<Marker>>([]);
+
   useEffect(() => {
     if (map) {
+
+      markers.forEach((marker) => {
+        marker.remove();
+      });
+
+      const newMarkers: Array<Marker> = [];
+
       points.forEach((point) => {
         const marker = new Marker({
           lat: point.location.latitude,
@@ -59,13 +66,16 @@ function Map(props : ConnectedComponentProps): JSX.Element {
               : defaultCustomIcon,
           )
           .addTo(map);
+        newMarkers.push(marker);
       });
+
+      setMarkers(newMarkers);
     }
-  }, [map, points, activeOfferForMap, city]);
+  }, [points, activeOfferForMap]);
 
   useEffect(() => {
     map?.setView([city.location.latitudeCity, city.location.longitudeCity],city.location.zoomCity);
-  }, [city]);
+  },[city]);
 
   return (
     <div

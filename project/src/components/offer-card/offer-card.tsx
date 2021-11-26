@@ -7,7 +7,7 @@ import { State } from '../../types/state';
 
 
 import {OfferCardProps} from '../../types/types';
-import { AppRoute } from '../../const';
+import { AppRoute, CommandFavorite } from '../../const';
 import { ThunkDispatch, AnyAction } from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
 
@@ -65,7 +65,7 @@ function OfferCardScreen(props : ConnectedComponentProps): JSX.Element {
               className={'place-card__bookmark-button button place-card__bookmark-button--active'}
               type="button"
               onClick={() => authorizationStatus?
-                setStatusFavoritesOffer(offer.id, 0, isFavoritesPage):
+                setStatusFavoritesOffer(offer.id, CommandFavorite.DeleteFavorite, isFavoritesPage):
                 history.push(AppRoute.SignIn)}
             >
               <svg className="place-card__bookmark-icon" width="18" height="19">
@@ -77,7 +77,7 @@ function OfferCardScreen(props : ConnectedComponentProps): JSX.Element {
               className={'place-card__bookmark-button button'}
               type="button"
               onClick={() => authorizationStatus?
-                setStatusFavoritesOffer(offer.id, 1, isFavoritesPage):
+                setStatusFavoritesOffer(offer.id, CommandFavorite.AddFavorite, isFavoritesPage):
                 history.push(AppRoute.SignIn)}
             >
               <svg className="place-card__bookmark-icon" width="18" height="19">

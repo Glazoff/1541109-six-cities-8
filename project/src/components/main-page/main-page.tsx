@@ -7,13 +7,15 @@ import HeaderScreen from '../header/header';
 
 import {State} from '../../types/state';
 
-import {selectCityType, fillListType, fillList, selectCity} from '../../store/action';
+import { fillList, selectCity, loadOffers} from '../../store/action';
 import {Offers} from '../../types/offers';
-import {Dispatch} from 'react';
 
 import SortItemScreen from '../sort-item/sort-item';
 
 import {SortItemType, CityList} from '../../const';
+import { ThunkDispatch, AnyAction } from '@reduxjs/toolkit';
+import { AxiosInstance } from 'axios';
+import { useEffect } from 'react';
 
 
 const setSortOffers = (offers: Offers | undefined, typeSort: string | null, originalSort: Offers | undefined) => {
@@ -42,12 +44,15 @@ const mapStateToProps = ({titleCity, offers, stateSortOffers, sortOffers}: State
     offers?.filter((offer) => offer.city.nameCity === titleCity)),
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<selectCityType | fillListType>) => ({
+const mapDispatchToProps = (dispatch: ThunkDispatch<State, AxiosInstance, AnyAction>) => ({
   onChangeCity(titleCity: string ) {
     dispatch(selectCity(titleCity));
   },
   onLoad(offers: Offers) {
     dispatch(fillList(offers));
+  },
+  setOffers() {
+    dispatch(loadOffers());
   },
 });
 
@@ -56,7 +61,9 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 function MainPageScreen(props: PropsFromRedux): JSX.Element {
-  const {onChangeCity, titleCity, sortOffers} = props;
+  const {onChangeCity, titleCity, sortOffers, setOffers} = props;
+
+  useEffect(() => setOffers(),[]);
 
 
   return sortOffers ? (

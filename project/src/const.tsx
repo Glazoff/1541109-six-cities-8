@@ -70,3 +70,23 @@ export enum MARKERS_MAP {
   MarkerCurrent = 'img/pin-active.svg'
 }
 
+export enum CommandFavorite {
+  AddFavorite = 1,
+  DeleteFavorite = 0,
+}
+
+export enum RestrictionForInput {
+  MaxInit = 300,
+  MiniInit = 50,
+  EmptyStart = '',
+}
+
+export const ERROR_COMMENTS = 'комментарий не отправлен';
+
+export enum HttpCode {
+  Unauthorized = 401,
+  OK = 200,
+  LoggedOut = 204,
+}
+
+

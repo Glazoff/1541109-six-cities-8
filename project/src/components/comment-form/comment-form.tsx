@@ -4,7 +4,7 @@ import {  Fragment, useState} from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {sendCommentOffer} from '../../store/action';
 import { State } from '../../types/state';
-import {COUNTS_RATING} from '../../const';
+import {COUNTS_RATING, RestrictionForInput} from '../../const';
 
 type CommentFormProps = {
   id: string,
@@ -87,7 +87,7 @@ function CommentFormScreen(props: ConnectedComponentProps): JSX.Element {
           }}
           className="reviews__submit form__submit button"
           type="submit"
-          disabled={comment.length < 50 || comment.length > 300 || rating === '' || isCommentLoading}
+          disabled={comment.length < RestrictionForInput.MiniInit || comment.length > RestrictionForInput.MaxInit || rating === RestrictionForInput.EmptyStart || isCommentLoading}
         >
           Submit
         </button>
