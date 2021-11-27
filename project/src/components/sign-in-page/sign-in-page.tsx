@@ -6,6 +6,8 @@ import {State} from '../../types/state';
 import {AppRoute} from '../../const';
 import { ThunkDispatch, AnyAction } from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
+import {toast} from 'react-toastify';
+
 
 const mapStateToProps = ({authorizationStatus}: State) => ({
   authorizationStatus,
@@ -40,6 +42,7 @@ function SignInScreen(props: ConnectedComponentProps): JSX.Element {
       setAuth(email.current.value, password.current.value);
     } else {
       //to do выкинуть тост
+      toast.error('невверный логин или пароль');
     }
   }
 

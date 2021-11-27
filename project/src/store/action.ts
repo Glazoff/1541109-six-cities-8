@@ -115,7 +115,6 @@ export const getAuthFromServer = (callback: () => void): ThunkAction<void, State
       }})
     .catch((error) => {
       if(error) {
-        //todo кинуть тост по ошибке
         dispatch(setAuth(false));
       }
     })
@@ -133,7 +132,10 @@ export const sendAuthToServer = (email: string, password: string) => (dispatch: 
         dispatch(setAuth(true));
       }
     },
-    );
+    )
+    .catch(() =>{
+      toast.error('Ошибка при авторизации');
+    });
 };
 
 export const getComments = (id: number) => (dispatch: Dispatch, _getState: () => State, api: AxiosInstance): void => {
