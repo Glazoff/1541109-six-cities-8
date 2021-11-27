@@ -16,7 +16,7 @@ import { State } from '../types/state';
 import { AxiosInstance , AxiosResponse} from 'axios';
 import { SortItemType } from '../const';
 import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
-import { HttpCode, ERROR_COMMENTS } from '../const';
+import { HttpCode, ERROR_COMMENTS, IsPage } from '../const';
 
 export enum ActionType {
   ChangeCity = 'main/changeCity',
@@ -104,7 +104,7 @@ export const loadOffers = (): ThunkAction<void, State, AxiosInstance, AnyAction>
     });
 };
 
-export const getAuthFromServer = (): ThunkAction<void, State, AxiosInstance, AnyAction> => (dispatch: ThunkDispatch<State, AxiosInstance, AnyAction >, _getState:  () => State, api: AxiosInstance): void => {
+export const getAuthFromServer = (callback: () => void): ThunkAction<void, State, AxiosInstance, AnyAction> => (dispatch: ThunkDispatch<State, AxiosInstance, AnyAction >, _getState:  () => State, api: AxiosInstance): void => {
   api.get('/login')
     .then((response: AxiosResponse) => {
       if(response.status === HttpCode.OK){
@@ -115,9 +115,11 @@ export const getAuthFromServer = (): ThunkAction<void, State, AxiosInstance, Any
       }})
     .catch((error) => {
       if(error) {
+        //todo кинуть тост по ошибке
         dispatch(setAuth(false));
       }
-    });
+    })
+    .finally(callback);
 };
 
 export const sendAuthToServer = (email: string, password: string) => (dispatch: Dispatch, _getState: () => State, api: AxiosInstance): void => {
@@ -192,24 +194,37 @@ export const getHotelsFavorites = () => (dispatch: Dispatch, _getState: () => St
     });
 };
 
-export const setStatusFavorites = (id: number, numberStatus: number, isFavoritesPage: boolean):ThunkAction<void, State, AxiosInstance, Action> => (dispatch: Dispatch, getState: () => State, api: AxiosInstance): void => {
-  const {offers: allOffers, offersFavorites} = getState();
-  const offers = isFavoritesPage? offersFavorites: allOffers;
+export const setStatusFavorites = (id: number, numberStatus: number, isPage: string):ThunkAction<void, State, AxiosInstance, Action> => (dispatch: Dispatch, getState: () => State, api: AxiosInstance): void => {
+  const {offers, offersFavorites, offersNearby} = getState();
 
   api.post(`/favorite/${id}/${numberStatus}`)
     .then((response: AxiosResponse) => {
       if (response.status === HttpCode.OK) {
         const updatedOffer =  parseOffer(response.data);
-        const updatedOfferIndex = offers?.findIndex((offer) => offer.id === updatedOffer.id);
-        const isUpdateOffers = offers && (updatedOfferIndex !== undefined);
 
-        if (isUpdateOffers) {
-          offers.splice(updatedOfferIndex, 1, updatedOffer);
-          if(isFavoritesPage){
-            dispatch(setHotelsFavorites([...offers]));
-          } else {
-            dispatch(fillList(offers));
-          }
+        const updatedOfferIndex = offers?.findIndex((offer) => offer.id === updatedOffer.id);
+        const updatedOfferFavoriteIndex = offersFavorites?.findIndex((offer) => offer.id === updatedOffer.id);
+        const updatedOfferNearbyIndex = offersNearby?.findIndex((offer) => offer.id === updatedOffer.id);
+
+        switch(isPage) {
+          case IsPage.PageMain:
+            if(offers && (updatedOfferIndex !== undefined)) {
+              offers.splice(updatedOfferIndex, 1, updatedOffer);
+              dispatch(fillList(offers));
+            }
+            break;
+          case IsPage.PageFavorites:
+            if(offersFavorites && (updatedOfferFavoriteIndex !== undefined)) {
+              offersFavorites.splice(updatedOfferFavoriteIndex, 1, updatedOffer);
+              dispatch(setHotelsFavorites([...offersFavorites]));
+            }
+            break ;
+          case IsPage.PageRoomOffer:
+            if(offersNearby && (updatedOfferNearbyIndex !== undefined)) {
+              offersNearby.splice(updatedOfferNearbyIndex, 1, updatedOffer);
+              dispatch(setHotelNearby([...offersNearby]));
+            }
+            break;
         }
       }
     });
@@ -237,7 +252,7 @@ export const updateRoomOffer = (id: number, numberStatus: number):ThunkAction<vo
 };
 
 
-export const sendCommentOffer = (id: number, comment: string, rating: number) =>(dispatch: Dispatch, _getState: () => State, api: AxiosInstance): void => {
+export const sendCommentOffer = (id: number, comment: string, rating: number, cb: () => void) =>(dispatch: Dispatch, _getState: () => State, api: AxiosInstance): void => {
   dispatch(setCommentLoading(true));
   api.post(`/comments/${id}`, {comment, rating})
     .then((response:AxiosResponse) => {
@@ -246,6 +261,7 @@ export const sendCommentOffer = (id: number, comment: string, rating: number) =>
         const updatedComments = parseComments(response.data);
 
         dispatch(setComments(updatedComments));
+        cb();
       }
     })
     .catch((error: AxiosResponse) => {

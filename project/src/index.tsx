@@ -29,14 +29,14 @@ export const API = createAPI(onUnauthorized);
 export const store = createStore(reducer, composeWithDevTools(applyMiddleware(thunk.withExtraArgument(API))));
 
 
-(store.dispatch as ThunkDispatch<State, AxiosInstance, AnyAction>)(getAuthFromServer());
+(store.dispatch as ThunkDispatch<State, AxiosInstance, AnyAction>)(getAuthFromServer(() => {
+  ReactDOM.render(
+    <React.StrictMode>
+      <Provider store={store} >
+        <ToastContainer/>
+        <App/>
+      </Provider>
 
-ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store} >
-      <ToastContainer/>
-      <App/>
-    </Provider>
-
-  </React.StrictMode>,
-  document.getElementById('root'));
+    </React.StrictMode>,
+    document.getElementById('root'));
+}));

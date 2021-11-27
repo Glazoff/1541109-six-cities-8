@@ -8,12 +8,14 @@ export type OfferCardProps = {
   offer: Offer;
   isFavoritesPage: boolean;
   isRoomOfferPage: boolean;
+  isPage: string;
 }
 
 export type OfferListProps = {
   offers: Offers ;
   isFavoritesPage: boolean;
   isRoomOfferPage: boolean;
+  isPage: string;
 }
 
 export type ReviewsListType = {

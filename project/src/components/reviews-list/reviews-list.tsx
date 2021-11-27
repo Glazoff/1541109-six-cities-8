@@ -13,7 +13,7 @@ function ReviewsListScreen(props: ReviewsListType): JSX.Element {
   return (
     <ul className="reviews__list">
       {
-        sortComments.map((comment) => (
+        sortComments.slice(0, 10).map((comment) => (
           <ReviewsCardScreen
             key={comment.id}
             commentProps={comment}

@@ -12,7 +12,7 @@ import {Offers} from '../../types/offers';
 
 import SortItemScreen from '../sort-item/sort-item';
 
-import {SortItemType, CityList} from '../../const';
+import {SortItemType, CityList, IsPage} from '../../const';
 import { ThunkDispatch, AnyAction } from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
 import { useEffect } from 'react';
@@ -143,6 +143,7 @@ function MainPageScreen(props: PropsFromRedux): JSX.Element {
                   offers={sortOffers}
                   isFavoritesPage={false}
                   isRoomOfferPage={false}
+                  isPage={IsPage.PageMain}
                 />
 
               </section>

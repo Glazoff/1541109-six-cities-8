@@ -15,8 +15,8 @@ const mapStateToProps = ({isCommentLoading}: State) => ({
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<State, AxiosInstance, AnyAction>) => ({
-  sendComment(id: number, comment: string, rating: number) {
-    dispatch(sendCommentOffer(id, comment, rating));
+  sendComment(id: number, comment: string, rating: number, cb: () => void) {
+    dispatch(sendCommentOffer(id, comment, rating, cb));
   },
 });
 
@@ -82,8 +82,7 @@ function CommentFormScreen(props: ConnectedComponentProps): JSX.Element {
         <button
           onClick={(evt) => {
             evt.preventDefault();
-            sendComment(Number(id),comment, Number(rating));
-            resetCommentForm();
+            sendComment(Number(id),comment, Number(rating), resetCommentForm);
           }}
           className="reviews__submit form__submit button"
           type="submit"

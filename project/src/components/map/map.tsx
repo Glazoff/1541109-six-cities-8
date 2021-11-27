@@ -7,19 +7,19 @@ import useMap from '../../hooks/useMap';
 import {Icon, Marker} from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-import {MARKERS_MAP} from '../../const';
+import {MarkersMap} from '../../const';
 import { connect, ConnectedProps } from 'react-redux';
 import { State } from '../../types/state';
 
 
 const defaultCustomIcon = new Icon({
-  iconUrl: MARKERS_MAP.MarkerDefault,
+  iconUrl: MarkersMap.MarkerDefault,
   iconSize: [40, 50],
   iconAnchor: [20, 40],
 });
 
 const currentCustomIcon = new Icon({
-  iconUrl: MARKERS_MAP.MarkerCurrent,
+  iconUrl: MarkersMap.MarkerCurrent,
   iconSize: [40, 50],
   iconAnchor: [20, 40],
 });

@@ -2,7 +2,7 @@ import OfferCardScreen from '../offer-card/offer-card';
 
 import {OfferListProps} from '../../types/types';
 
-function OfferListScreen ({offers, isFavoritesPage, isRoomOfferPage} : OfferListProps): JSX.Element{
+function OfferListScreen ({offers, isFavoritesPage, isRoomOfferPage, isPage} : OfferListProps): JSX.Element{
   return isRoomOfferPage? (
     <div className="near-places__list places__list">
       {
@@ -12,6 +12,7 @@ function OfferListScreen ({offers, isFavoritesPage, isRoomOfferPage} : OfferList
             key={offer.id}
             isFavoritesPage = {isFavoritesPage}
             isRoomOfferPage
+            isPage={isPage}
           />
         ),
         )
@@ -27,6 +28,7 @@ function OfferListScreen ({offers, isFavoritesPage, isRoomOfferPage} : OfferList
               key={offer.id}
               isFavoritesPage = {isFavoritesPage}
               isRoomOfferPage={false}
+              isPage={isPage}
             />
           ),
           )

@@ -65,7 +65,7 @@ export const COUNTS_RATING = [
   {star: 1},
 ];
 
-export enum MARKERS_MAP {
+export enum MarkersMap {
   MarkerDefault = '/img/pin.svg',
   MarkerCurrent = 'img/pin-active.svg'
 }
@@ -79,6 +79,12 @@ export enum RestrictionForInput {
   MaxInit = 300,
   MiniInit = 50,
   EmptyStart = '',
+}
+
+export const enum IsPage {
+  PageMain = 'PageMain',
+  PageFavorites = 'PageFavorites',
+  PageRoomOffer = 'PageRoomOffer',
 }
 
 export const ERROR_COMMENTS = 'комментарий не отправлен';

@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Link, useHistory  } from 'react-router-dom';
-import {SelectOfferForMap, setStatusFavorites } from '../../store/action';
+import { SelectOfferForMap, setStatusFavorites} from '../../store/action';
 import { Offer } from '../../types/offers';
 import { State } from '../../types/state';
 
@@ -19,8 +19,8 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<State, AxiosInstance, AnyAct
   selectOffer (offer: Offer | null) {
     dispatch(SelectOfferForMap(offer));
   },
-  setStatusFavoritesOffer(id: number, numberStatus: number, isFavoritesPage: boolean) {
-    dispatch(setStatusFavorites(id, numberStatus, isFavoritesPage));
+  setStatusFavoritesOffer(id: number, numberStatus: number, IsPage: string) {
+    dispatch(setStatusFavorites(id, numberStatus, IsPage));
   },
 });
 
@@ -30,7 +30,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & OfferCardProps;
 
 function OfferCardScreen(props : ConnectedComponentProps): JSX.Element {
-  const {offer , isFavoritesPage, selectOffer, isRoomOfferPage, setStatusFavoritesOffer, authorizationStatus} = props;
+  const {offer , isFavoritesPage, selectOffer, isRoomOfferPage, setStatusFavoritesOffer, authorizationStatus, isPage} = props;
 
   const history = useHistory();
   const {previewImage, isPremium, price, title, type, isFavorite, rating} = offer;
@@ -65,7 +65,7 @@ function OfferCardScreen(props : ConnectedComponentProps): JSX.Element {
               className={'place-card__bookmark-button button place-card__bookmark-button--active'}
               type="button"
               onClick={() => authorizationStatus?
-                setStatusFavoritesOffer(offer.id, CommandFavorite.DeleteFavorite, isFavoritesPage):
+                setStatusFavoritesOffer(offer.id, CommandFavorite.DeleteFavorite, isPage):
                 history.push(AppRoute.SignIn)}
             >
               <svg className="place-card__bookmark-icon" width="18" height="19">
@@ -77,7 +77,7 @@ function OfferCardScreen(props : ConnectedComponentProps): JSX.Element {
               className={'place-card__bookmark-button button'}
               type="button"
               onClick={() => authorizationStatus?
-                setStatusFavoritesOffer(offer.id, CommandFavorite.AddFavorite, isFavoritesPage):
+                setStatusFavoritesOffer(offer.id, CommandFavorite.AddFavorite, isPage):
                 history.push(AppRoute.SignIn)}
             >
               <svg className="place-card__bookmark-icon" width="18" height="19">
