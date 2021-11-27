@@ -87,7 +87,11 @@ export const enum IsPage {
   PageRoomOffer = 'PageRoomOffer',
 }
 
-export const ERROR_COMMENTS = 'комментарий не отправлен';
+export enum ToastMessage {
+  ErrorComments ='Комментарий не отправлен',
+  ErrorEmailPassword = 'Невверный логин или пароль',
+  ErrorAuth = 'Ошибка при авторизации',
+}
 
 export enum HttpCode {
   Unauthorized = 401,

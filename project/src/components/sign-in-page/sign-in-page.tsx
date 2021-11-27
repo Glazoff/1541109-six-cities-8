@@ -3,7 +3,7 @@ import {connect, ConnectedProps} from 'react-redux';
 import {sendAuthToServer} from '../../store/action';
 import {Link, Redirect, Route} from 'react-router-dom';
 import {State} from '../../types/state';
-import {AppRoute} from '../../const';
+import {AppRoute, ToastMessage} from '../../const';
 import { ThunkDispatch, AnyAction } from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
 import {toast} from 'react-toastify';
@@ -41,8 +41,7 @@ function SignInScreen(props: ConnectedComponentProps): JSX.Element {
 
       setAuth(email.current.value, password.current.value);
     } else {
-      //to do выкинуть тост
-      toast.error('невверный логин или пароль');
+      toast.error(ToastMessage.ErrorEmailPassword);
     }
   }
 

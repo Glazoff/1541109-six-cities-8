@@ -16,7 +16,7 @@ import { State } from '../types/state';
 import { AxiosInstance , AxiosResponse} from 'axios';
 import { SortItemType } from '../const';
 import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
-import { HttpCode, ERROR_COMMENTS, IsPage } from '../const';
+import { HttpCode, ToastMessage, IsPage } from '../const';
 
 export enum ActionType {
   ChangeCity = 'main/changeCity',
@@ -134,7 +134,7 @@ export const sendAuthToServer = (email: string, password: string) => (dispatch: 
     },
     )
     .catch(() =>{
-      toast.error('Ошибка при авторизации');
+      toast.error(ToastMessage.ErrorAuth);
     });
 };
 
@@ -268,7 +268,7 @@ export const sendCommentOffer = (id: number, comment: string, rating: number, cb
     })
     .catch((error: AxiosResponse) => {
       if(error) {
-        toast.error(ERROR_COMMENTS);
+        toast.error(ToastMessage.ErrorComments);
       }
     })
     .finally(()=> dispatch(setCommentLoading(false)));
