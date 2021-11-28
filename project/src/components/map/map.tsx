@@ -71,7 +71,7 @@ function Map(props : ConnectedComponentProps): JSX.Element {
 
       setMarkers(newMarkers);
     }
-  }, [points, activeOfferForMap]);
+  }, [points, activeOfferForMap, map]);
 
   useEffect(() => {
     map?.setView([city.location.latitudeCity, city.location.longitudeCity],city.location.zoomCity);

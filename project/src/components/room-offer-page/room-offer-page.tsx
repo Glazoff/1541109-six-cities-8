@@ -15,7 +15,7 @@ import HeaderScreen from '../header/header';
 
 import {getComments, getHotelNearby, getHotel, SelectOfferForMap, updateRoomOffer} from '../../store/action';
 import Error404Screen from '../error-404-page/error-404-page';
-import { AppRoute, IsPage } from '../../const';
+import { AppRoute, Page } from '../../const';
 import { ThunkDispatch, AnyAction } from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
 
@@ -217,7 +217,7 @@ function RoomOfferScreen(props: PropsFromRedux): JSX.Element {
               offers={offersNearby}
               isFavoritesPage={false}
               isRoomOfferPage
-              isPage={IsPage.PageRoomOffer}
+              currentPage={Page.PageRoomOffer}
             />
 
           </section>

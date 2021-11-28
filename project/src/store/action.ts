@@ -16,7 +16,7 @@ import { State } from '../types/state';
 import { AxiosInstance , AxiosResponse} from 'axios';
 import { SortItemType } from '../const';
 import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
-import { HttpCode, ToastMessage, IsPage } from '../const';
+import { HttpCode, ToastMessage, Page } from '../const';
 
 export enum ActionType {
   ChangeCity = 'main/changeCity',
@@ -196,7 +196,7 @@ export const getHotelsFavorites = () => (dispatch: Dispatch, _getState: () => St
     });
 };
 
-export const setStatusFavorites = (id: number, numberStatus: number, isPage: string):ThunkAction<void, State, AxiosInstance, Action> => (dispatch: Dispatch, getState: () => State, api: AxiosInstance): void => {
+export const setStatusFavorites = (id: number, numberStatus: number, currentPage: string):ThunkAction<void, State, AxiosInstance, Action> => (dispatch: Dispatch, getState: () => State, api: AxiosInstance): void => {
   const {offers, offersFavorites, offersNearby} = getState();
 
   api.post(`/favorite/${id}/${numberStatus}`)
@@ -208,20 +208,20 @@ export const setStatusFavorites = (id: number, numberStatus: number, isPage: str
         const updatedOfferFavoriteIndex = offersFavorites?.findIndex((offer) => offer.id === updatedOffer.id);
         const updatedOfferNearbyIndex = offersNearby?.findIndex((offer) => offer.id === updatedOffer.id);
 
-        switch(isPage) {
-          case IsPage.PageMain:
+        switch(currentPage) {
+          case Page.PageMain:
             if(offers && (updatedOfferIndex !== undefined)) {
               offers.splice(updatedOfferIndex, 1, updatedOffer);
               dispatch(fillList(offers));
             }
             break;
-          case IsPage.PageFavorites:
+          case Page.PageFavorites:
             if(offersFavorites && (updatedOfferFavoriteIndex !== undefined)) {
               offersFavorites.splice(updatedOfferFavoriteIndex, 1, updatedOffer);
               dispatch(setHotelsFavorites([...offersFavorites]));
             }
             break ;
-          case IsPage.PageRoomOffer:
+          case Page.PageRoomOffer:
             if(offersNearby && (updatedOfferNearbyIndex !== undefined)) {
               offersNearby.splice(updatedOfferNearbyIndex, 1, updatedOffer);
               dispatch(setHotelNearby([...offersNearby]));

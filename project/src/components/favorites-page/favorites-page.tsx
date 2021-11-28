@@ -9,7 +9,7 @@ import HeaderScreen from '../header/header';
 import {getHotelsFavorites} from '../../store/action';
 import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
-import { IsPage } from '../../const';
+import { Page } from '../../const';
 
 const mapStateToProps = ({offersFavorites}: State) => ({
   offersFavorites,
@@ -52,7 +52,7 @@ function FavoritesPageScreen (props : PropsFromRedux): JSX.Element {
             offers={offers?.filter((offer) => offer.city.nameCity === city)}
             isFavoritesPage
             isRoomOfferPage={false}
-            isPage={IsPage.PageFavorites}
+            currentPage={Page.PageFavorites}
           />:
           false
       }

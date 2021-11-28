@@ -81,7 +81,7 @@ export enum RestrictionForInput {
   EmptyStart = '',
 }
 
-export const enum IsPage {
+export const enum Page {
   PageMain = 'PageMain',
   PageFavorites = 'PageFavorites',
   PageRoomOffer = 'PageRoomOffer',

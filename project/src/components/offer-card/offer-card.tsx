@@ -30,7 +30,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & OfferCardProps;
 
 function OfferCardScreen(props : ConnectedComponentProps): JSX.Element {
-  const {offer , isFavoritesPage, selectOffer, isRoomOfferPage, setStatusFavoritesOffer, authorizationStatus, isPage} = props;
+  const {offer , isFavoritesPage, selectOffer, isRoomOfferPage, setStatusFavoritesOffer, authorizationStatus, currentPage} = props;
 
   const history = useHistory();
   const {previewImage, isPremium, price, title, type, isFavorite, rating} = offer;
@@ -65,7 +65,7 @@ function OfferCardScreen(props : ConnectedComponentProps): JSX.Element {
               className={'place-card__bookmark-button button place-card__bookmark-button--active'}
               type="button"
               onClick={() => authorizationStatus?
-                setStatusFavoritesOffer(offer.id, CommandFavorite.DeleteFavorite, isPage):
+                setStatusFavoritesOffer(offer.id, CommandFavorite.DeleteFavorite, currentPage):
                 history.push(AppRoute.SignIn)}
             >
               <svg className="place-card__bookmark-icon" width="18" height="19">
@@ -77,7 +77,7 @@ function OfferCardScreen(props : ConnectedComponentProps): JSX.Element {
               className={'place-card__bookmark-button button'}
               type="button"
               onClick={() => authorizationStatus?
-                setStatusFavoritesOffer(offer.id, CommandFavorite.AddFavorite, isPage):
+                setStatusFavoritesOffer(offer.id, CommandFavorite.AddFavorite, currentPage):
                 history.push(AppRoute.SignIn)}
             >
               <svg className="place-card__bookmark-icon" width="18" height="19">
